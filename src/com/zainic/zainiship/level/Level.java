@@ -10,16 +10,12 @@ import com.zainic.zainiship.entity.Entity;
 public class Level {
 
 	protected int width, height;
-	protected int[] tilesInt;
-	protected int[] tiles;
-	protected int tile_size;
 	
 	private List<Entity> entities = new ArrayList<Entity>();
 	
 	public Level(int width, int height) {
 		this.width = width;
 		this.height = height;
-		tilesInt = new int[width * height];
 		generateLevel();
 	}
 	
@@ -38,6 +34,10 @@ public class Level {
 	
 	private void time() {
 		
+	}
+	
+	public List<Entity> getProjectiles() {
+		return entities;
 	}
 	
 	public void update() {

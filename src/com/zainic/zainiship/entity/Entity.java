@@ -1,14 +1,16 @@
 package com.zainic.zainiship.entity;
 
+import com.zainic.zainiship.level.Level;
 import com.zainic.zainiship.screen.Screen;
 
 public abstract class Entity {
 	
 	private int x, y;
 	private boolean removed = false;
+	protected Level level;
 	
-	public void init() {
-		
+	public void init(Level level) {
+		this.level = level;
 	}
 	
 	public int getX() {
