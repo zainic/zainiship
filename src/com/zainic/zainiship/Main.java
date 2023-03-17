@@ -10,13 +10,15 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
+import com.zainic.zainiship.screen.Screen;
+
 public class Main extends Canvas implements Runnable{
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static int width = 300;
+	private static int width = 600;
 	private static int height = width / 16 * 9;
-	private static int scale = 3;
+	private static int scale = 2;
 	private static String title = "Zainiship";
 	
 	private Thread thread;
@@ -26,11 +28,14 @@ public class Main extends Canvas implements Runnable{
 	private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
 	
+	private Screen screen;
+	
 	public Main() {
 		Dimension size = new Dimension(width*scale, height*scale);
 		this.setPreferredSize(size);
 		
 		frame = new JFrame();
+		screen = new Screen(width, height);
 	}
 	
 	public synchronized void start() {
@@ -90,8 +95,10 @@ public class Main extends Canvas implements Runnable{
 			return;
 		}
 		
+		screen.clear();
+		
 		for (int i = 0; i < pixels.length; i++) {
-			pixels[i] = 0xff00ff;
+			pixels[i] = screen.pixels[i];
 		}
 		
 		Graphics g = bs.getDrawGraphics(); //link between graphics and buffer
