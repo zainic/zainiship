@@ -10,6 +10,7 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
+import com.zainic.zainiship.level.Level;
 import com.zainic.zainiship.screen.Screen;
 
 public class Main extends Canvas implements Runnable{
@@ -29,6 +30,8 @@ public class Main extends Canvas implements Runnable{
 	private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
 	
 	private Screen screen;
+	private Level level;
+	private int xScroll = 0, yScroll = 0;
 	
 	public Main() {
 		Dimension size = new Dimension(width*scale, height*scale);
@@ -36,6 +39,7 @@ public class Main extends Canvas implements Runnable{
 		
 		frame = new JFrame();
 		screen = new Screen(width, height);
+		level = Level.level1;
 	}
 	
 	public synchronized void start() {
@@ -96,6 +100,9 @@ public class Main extends Canvas implements Runnable{
 		}
 		
 		screen.clear();
+		level.render(xScroll, yScroll, screen);
+		yScroll++;
+		xScroll++;
 		
 		for (int i = 0; i < pixels.length; i++) {
 			pixels[i] = screen.pixels[i];
