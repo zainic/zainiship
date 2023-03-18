@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.zainic.zainiship.screen.Screen;
+import com.zainic.zainiship.level.Level;
 import com.zainic.zainiship.entity.Entity;
 
 
 public class Level {
 
 	protected int width, height;
+	protected int[] background;
 	
 	private List<Entity> entities = new ArrayList<Entity>();
+	
+	public static Level level1 = new Level1("/background.png");
 	
 	public Level(int width, int height) {
 		this.width = width;
@@ -22,6 +26,18 @@ public class Level {
 	public Level(String path) {
 		loadLevel(path);
 		generateLevel();
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
+	}
+	
+	public int[] getBackground() {
+		return background;
 	}
 	
 	protected void generateLevel() {
@@ -36,7 +52,7 @@ public class Level {
 		
 	}
 	
-	public List<Entity> getProjectiles() {
+	public List<Entity> getEntities() {
 		return entities;
 	}
 	
@@ -46,7 +62,9 @@ public class Level {
 		}
 	}
 	
-	public void render(Screen screen) {
+	public void render(int xScroll, int yScroll, Screen screen) {
+		screen.renderBackground(xScroll, yScroll, this);
+		
 		for (int i = 0; i < entities.size(); i++) {
 			entities.get(i).render(screen);
 		}
