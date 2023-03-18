@@ -10,8 +10,8 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
+import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.level.Level;
-import com.zainic.zainiship.screen.Screen;
 
 public class Main extends Canvas implements Runnable{
 	

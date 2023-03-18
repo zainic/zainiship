@@ -1,7 +1,7 @@
 package com.zainic.zainiship.entity;
 
+import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.level.Level;
-import com.zainic.zainiship.screen.Screen;
 
 public abstract class Entity {
 	

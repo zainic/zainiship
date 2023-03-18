@@ -3,9 +3,9 @@ package com.zainic.zainiship.level;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.zainic.zainiship.screen.Screen;
 import com.zainic.zainiship.level.Level;
 import com.zainic.zainiship.entity.Entity;
+import com.zainic.zainiship.graphics.Screen;
 
 
 public class Level {
@@ -15,7 +15,7 @@ public class Level {
 	
 	private List<Entity> entities = new ArrayList<Entity>();
 	
-	public static Level level1 = new Level1("/background.png");
+	public static Level level1 = new Level1("/levels/level1/background.png");
 	
 	public Level(int width, int height) {
 		this.width = width;

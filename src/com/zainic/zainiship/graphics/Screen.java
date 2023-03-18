@@ -1,6 +1,4 @@
-package com.zainic.zainiship.screen;
-
-import java.util.Random;
+package com.zainic.zainiship.graphics;
 
 import com.zainic.zainiship.level.Level;
 
