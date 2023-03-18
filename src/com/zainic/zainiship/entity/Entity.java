@@ -9,6 +9,8 @@ public abstract class Entity {
 	private boolean removed = false;
 	protected Level level;
 	protected Screen screen;
+	protected int hitboxAnchorX, hitboxAnchorY;
+	protected int hitboxSizeX, hitboxSizeY;
 	
 	public void init(Level level, Screen screen) {
 		this.level = level;

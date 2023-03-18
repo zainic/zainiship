@@ -36,7 +36,11 @@ public abstract class Mob extends Entity{
 		boolean solid = false;
 		int xt = getX() + xa;
 		int yt = getY() + ya;
-		if (xt < 0 || xt >= screen.width - 64 || yt < 0 || yt >= screen.height - 64) {
+		int left = 0 - this.hitboxAnchorX;
+		int top = 0 - this.hitboxAnchorY;
+		int right = screen.width - (this.hitboxAnchorX + this.hitboxSizeX) + 1;
+		int bottom = screen.height - (this.hitboxAnchorY + this.hitboxSizeY) + 1;
+		if (xt < left || xt >= right || yt < top || yt >= bottom) {
 			solid = true;
 		}
 		return solid;

@@ -45,7 +45,7 @@ public class Main extends Canvas implements Runnable{
 		screen = new Screen(width, height);
 		level = Level.level1;
 		key = new Keyboard();
-		player = new Player((width >> 1) - 32, (height >> 1) - 32, key);
+		player = new Player((width >> 1) - 16, (height >> 1) - 16, key);
 		player.init(level, screen);
 		
 		this.addKeyListener(key);

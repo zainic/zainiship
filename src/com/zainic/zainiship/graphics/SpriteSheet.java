@@ -13,6 +13,8 @@ public class SpriteSheet {
 	public int[] pixels;
 	
 	public static SpriteSheet player = new SpriteSheet("/spritesheets/player/spriteships.png", 256);
+	public static SpriteSheet player32 = new SpriteSheet("/spritesheets/player/spriteships32.png", 128);
+
 	
 	public SpriteSheet(String path, int size) {
 		this.path = path;

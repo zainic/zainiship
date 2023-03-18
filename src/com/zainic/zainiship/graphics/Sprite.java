@@ -12,6 +12,7 @@ public class Sprite {
 	
 	// Player sprites
 	public static Sprite player_ship = new Sprite(64, 0, 0, SpriteSheet.player);
+	public static Sprite player_ship32 = new Sprite(32, 0, 0, SpriteSheet.player32);
 	
 	public Sprite(int size, int x, int y, SpriteSheet sheet) {
 		this.SIZE = size;

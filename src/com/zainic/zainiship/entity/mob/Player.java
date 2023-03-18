@@ -12,6 +12,11 @@ public class Player extends Mob{
 	public Player(int x, int y, Keyboard input) {
 		setX(x);
 		setY(y);
+		sprite = Sprite.player_ship32;
+		this.hitboxAnchorX = 4;
+		this.hitboxAnchorY = 6;
+		this.hitboxSizeX = 24;
+		this.hitboxSizeY = 25;
 		this.input = input;
 	}
 	
@@ -33,7 +38,6 @@ public class Player extends Mob{
 	}
 	
 	public void render(Screen screen) {
-		sprite = Sprite.player_ship;
 		screen.renderPlayer(getX(), getY(), sprite);
 	}
 
