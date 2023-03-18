@@ -63,6 +63,7 @@ public class Level {
 	}
 	
 	public void render(int xScroll, int yScroll, Screen screen) {
+		//screen.setOffset(xScroll, yScroll);
 		screen.renderBackground(xScroll, yScroll, this);
 		
 		for (int i = 0; i < entities.size(); i++) {

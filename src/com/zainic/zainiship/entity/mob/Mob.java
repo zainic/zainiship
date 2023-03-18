@@ -1,6 +1,7 @@
 package com.zainic.zainiship.entity.mob;
 
 import com.zainic.zainiship.entity.Entity;
+import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.graphics.Sprite;
 
 public abstract class Mob extends Entity{
@@ -16,8 +17,10 @@ public abstract class Mob extends Entity{
 			return;
 		}
 		
-		setX(getX() + xa);
-		setY(getY() + ya);
+		if (!borderCollision(xa, ya, screen)) {
+			setX(getX() + xa);
+			setY(getY() + ya);
+		}
 
 	}
 	
@@ -27,6 +30,16 @@ public abstract class Mob extends Entity{
 
 	public void render() {
 
+	}
+	
+	private boolean borderCollision(int xa, int ya, Screen screen) {
+		boolean solid = false;
+		int xt = getX() + xa;
+		int yt = getY() + ya;
+		if (xt < 0 || xt >= screen.width - 64 || yt < 0 || yt >= screen.height - 64) {
+			solid = true;
+		}
+		return solid;
 	}
 
 }

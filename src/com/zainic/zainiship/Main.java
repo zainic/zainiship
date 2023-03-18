@@ -35,7 +35,7 @@ public class Main extends Canvas implements Runnable{
 	private Level level;
 	private Keyboard key;
 	private Player player;
-	private int xScroll = 0, yScroll = 0;
+	private double xScroll = 0, yScroll = 0;
 	
 	public Main() {
 		Dimension size = new Dimension(width*scale, height*scale);
@@ -46,7 +46,9 @@ public class Main extends Canvas implements Runnable{
 		level = Level.level1;
 		key = new Keyboard();
 		player = new Player((width >> 1) - 32, (height >> 1) - 32, key);
-		player.init(level);
+		player.init(level, screen);
+		
+		this.addKeyListener(key);
 	}
 	
 	public synchronized void start() {
@@ -109,8 +111,11 @@ public class Main extends Canvas implements Runnable{
 		}
 		
 		screen.clear();
-		yScroll--;
-		level.render(xScroll, yScroll, screen);
+		//player.setY(player.getY() - 1);
+		//int xScroll = player.getX() - (screen.width >> 1) + 32;
+		//int yScroll = player.getY() - (screen.height >> 1) + 32;
+		yScroll -= 0.5;
+		level.render((int) xScroll, (int) yScroll, screen);
 		player.render(screen);
 		
 		for (int i = 0; i < pixels.length; i++) {

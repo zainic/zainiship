@@ -8,9 +8,11 @@ public abstract class Entity {
 	private int x, y;
 	private boolean removed = false;
 	protected Level level;
+	protected Screen screen;
 	
-	public void init(Level level) {
+	public void init(Level level, Screen screen) {
 		this.level = level;
+		this.screen = screen;
 	}
 	
 	public int getX() {
@@ -21,12 +23,12 @@ public abstract class Entity {
 		return this.y;
 	}
 	
-	public void setX(int x) {
-		this.x = x;
+	public void setX(int posX) {
+		this.x = posX;
 	}
 	
-	public void setY(int y) {
-		this.y = y;
+	public void setY(int posY) {
+		this.y = posY;
 	}
 	
 	public void update() {
