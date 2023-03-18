@@ -1,5 +1,6 @@
 package com.zainic.zainiship.graphics;
 
+import com.zainic.zainiship.graphics.Sprite;
 import com.zainic.zainiship.level.Level;
 
 public class Screen {
@@ -28,12 +29,43 @@ public class Screen {
 				int xa = x + xp;
 				if (x < 0 || x >= this.width || y < 0 || y >= this.height) break;
 				if (xa < 0 || xa >= level.getWidth()) {
-					xa %= level.getWidth();
+					xa = Math.floorMod(xa, level.getWidth());
 				}
 				if (ya < 0 || ya >= level.getHeight()) {
-					ya %= level.getHeight();
+					ya = Math.floorMod(ya, level.getHeight());
 				}
 				pixels[x + y * width] = level.getBackground()[xa + ya * level.getWidth()];
+			}
+		}
+	}
+	
+	public void renderSprite(int xp, int yp, Sprite sprite, boolean fixed) {
+		if (fixed) {
+			xp -= xOffset;
+			yp -= yOffset;
+		}
+		for (int y = 0; y < sprite.getHeight(); y++) {
+			int ya = y + yp;
+			for (int x = 0; x < sprite.getWidth(); x++) {
+				int xa = x + xp;
+				if (xa < 0 || xa >= width || ya < 0 || ya >= height) continue;
+				pixels[x + y * width] = sprite.pixels[x + y * sprite.getWidth()];
+			}
+		}
+		
+	}
+	
+	public void renderPlayer(int xp, int yp, Sprite sprite) {
+		xp -= xOffset;
+		yp -= yOffset;
+		for (int y = 0; y < sprite.SIZE; y++) {
+			int ya = y + yp;
+			for (int x = 0; x < sprite.SIZE; x++) {
+				int xa = x + xp;
+				if (xa < -sprite.SIZE || xa >= width || ya < 0 || ya >= height) break;
+				if (xa < 0) xa = 0;
+				int col = sprite.pixels[x + y * sprite.SIZE];
+				if (col != 0xff160702) pixels[xa + ya * width] = col;
 			}
 		}
 	}

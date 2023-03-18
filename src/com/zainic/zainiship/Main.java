@@ -10,6 +10,8 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
+import com.zainic.zainiship.input.Keyboard;
+import com.zainic.zainiship.entity.mob.Player;
 import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.level.Level;
 
@@ -31,6 +33,8 @@ public class Main extends Canvas implements Runnable{
 	
 	private Screen screen;
 	private Level level;
+	private Keyboard key;
+	private Player player;
 	private int xScroll = 0, yScroll = 0;
 	
 	public Main() {
@@ -40,6 +44,9 @@ public class Main extends Canvas implements Runnable{
 		frame = new JFrame();
 		screen = new Screen(width, height);
 		level = Level.level1;
+		key = new Keyboard();
+		player = new Player((width >> 1) - 32, (height >> 1) - 32, key);
+		player.init(level);
 	}
 	
 	public synchronized void start() {
@@ -89,7 +96,9 @@ public class Main extends Canvas implements Runnable{
 	}
 	
 	public void tick() {
-		
+		key.update();
+		player.update();
+		level.update();
 	}
 	
 	public void render() {
@@ -100,8 +109,9 @@ public class Main extends Canvas implements Runnable{
 		}
 		
 		screen.clear();
+		yScroll--;
 		level.render(xScroll, yScroll, screen);
-		yScroll++;
+		player.render(screen);
 		
 		for (int i = 0; i < pixels.length; i++) {
 			pixels[i] = screen.pixels[i];
