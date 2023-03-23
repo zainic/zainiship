@@ -14,6 +14,8 @@ public class SpriteSheet {
 	
 	public static SpriteSheet player = new SpriteSheet("/spritesheets/player/spriteships.png", 256);
 	public static SpriteSheet player32 = new SpriteSheet("/spritesheets/player/spriteships32.png", 128);
+	public static SpriteSheet enemyship = new SpriteSheet("/spritesheets/enemies/ship/enemyshipsheet.png", 256);
+	public static SpriteSheet enemyship32 = new SpriteSheet("/spritesheets/enemies/ship/enemyshipsheet32.png", 128);
 
 	
 	public SpriteSheet(String path, int size) {

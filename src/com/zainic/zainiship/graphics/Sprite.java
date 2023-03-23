@@ -1,7 +1,5 @@
 package com.zainic.zainiship.graphics;
 
-import com.zainic.zainiship.graphics.SpriteSheet;
-
 public class Sprite {
 	
 	private int x, y;
@@ -13,6 +11,19 @@ public class Sprite {
 	// Player sprites
 	public static Sprite player_ship = new Sprite(64, 0, 0, SpriteSheet.player);
 	public static Sprite player_ship32 = new Sprite(32, 0, 0, SpriteSheet.player32);
+	
+	// Enemy sprites
+	public static Sprite enemy_ship_1 = new Sprite(64, 0, 0, SpriteSheet.enemyship);
+	public static Sprite enemy_ship32_1 = new Sprite(32, 0, 0, SpriteSheet.enemyship32);
+	
+	public static Sprite enemy_ship_2 = new Sprite(64, 0, 1, SpriteSheet.enemyship);
+	public static Sprite enemy_ship32_2 = new Sprite(32, 0, 1, SpriteSheet.enemyship32);
+	
+	public static Sprite enemy_ship_3 = new Sprite(64, 0, 2, SpriteSheet.enemyship);
+	public static Sprite enemy_ship32_3 = new Sprite(32, 0, 2, SpriteSheet.enemyship32);
+	
+	public static Sprite enemy_ship_4 = new Sprite(64, 0, 3, SpriteSheet.enemyship);
+	public static Sprite enemy_ship32_5 = new Sprite(32, 0, 3, SpriteSheet.enemyship32);
 	
 	public Sprite(int size, int x, int y, SpriteSheet sheet) {
 		this.SIZE = size;
