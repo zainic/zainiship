@@ -11,6 +11,7 @@ import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 
 import com.zainic.zainiship.input.Keyboard;
+import com.zainic.zainiship.input.Mouse;
 import com.zainic.zainiship.entity.mob.Player;
 import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.level.Level;
@@ -48,7 +49,10 @@ public class Main extends Canvas implements Runnable{
 		player = new Player((width >> 1) - 16, (height >> 1) - 16, key);
 		player.init(level, screen);
 		
+		Mouse mouse = new Mouse();
 		this.addKeyListener(key);
+		this.addMouseListener(mouse);
+		this.addMouseMotionListener(mouse);
 	}
 	
 	public synchronized void start() {
@@ -130,7 +134,9 @@ public class Main extends Canvas implements Runnable{
 		//g.drawString("X : "+player.x+" Y : "+player.y, 100, 100);
 		//g.fillRect(Mouse.getX() - 5, Mouse.getY() - 5, 10, 10);
 		//g.fillRect(Mouse.getX() - 5, Mouse.getY() - 5, 10, 10);
-		//g.drawString("Button : " + Mouse.getB(), 10, 10);
+		g.drawString("Button : " + Mouse.getB(), 10, 10);
+		g.drawString("Inside : " + Mouse.isInsideScreen(), 10, 20);
+		g.drawString("loc : " + "(" + Mouse.getX() + ", " + Mouse.getY() + ")", 10, 30);
 		g.dispose(); //remove the graphics after not used
 		bs.show(); //show the buffer that being calculated
 	}
