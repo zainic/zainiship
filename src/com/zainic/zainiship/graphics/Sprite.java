@@ -25,6 +25,9 @@ public class Sprite {
 	public static Sprite enemy_ship_4 = new Sprite(64, 0, 3, SpriteSheet.enemyship);
 	public static Sprite enemy_ship32_5 = new Sprite(32, 0, 3, SpriteSheet.enemyship32);
 	
+	//Projectile Sprites
+	public static Sprite bullet_projectile = new Sprite(16, 0, 0, SpriteSheet.projectilesheet);
+	
 	public Sprite(int size, int x, int y, SpriteSheet sheet) {
 		this.SIZE = size;
 		this.width = size;

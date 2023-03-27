@@ -1,6 +1,6 @@
 package com.zainic.zainiship.graphics;
 
-import com.zainic.zainiship.graphics.Sprite;
+import com.zainic.zainiship.entity.projectile.Projectile;
 import com.zainic.zainiship.level.Level;
 
 public class Screen {
@@ -69,9 +69,25 @@ public class Screen {
 			}
 		}
 	}
+
+	public void renderProjectile(int xp, int yp, Projectile p) {
+		xp -= xOffset;
+		yp -= yOffset;
+		for (int y = 0; y < p.getSpriteSize(); y++) {
+			int ya = y + yp;
+			for (int x = 0; x < p.getSpriteSize(); x++) {
+				int xa = x + xp;
+				if (xa < -p.getSpriteSize() || xa >= width || ya < 0 || ya >= height) break;
+				if (xa < 0) xa = 0;
+				int col = p.getSprite().pixels[x + y * p.getSpriteSize()];
+				if (col != 0xff160702) pixels[xa + ya * width] = col;
+			}
+		}
+	}
 	
 	public void setOffset(int xOffset, int yOffset) {
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;		
 	}
+
 }

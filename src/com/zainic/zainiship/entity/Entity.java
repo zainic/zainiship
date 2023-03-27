@@ -17,6 +17,10 @@ public abstract class Entity {
 		this.screen = screen;
 	}
 	
+	public void init(Level level) {
+		this.level = level;
+	}
+	
 	public int getX() {
 		return this.x;
 	}
