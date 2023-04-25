@@ -3,25 +3,25 @@ package com.zainic.zainiship.entity.projectile;
 import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.graphics.Sprite;
 
-public class BulletProjectile extends Projectile {
+public class AlphaProjectile extends Projectile{
 	
-	public static final int FIRE_RATE = 15;
+	public static final int FIRE_RATE = 30;
 	
-	public BulletProjectile() {
+	public AlphaProjectile() {
 		super();
-		range = 200;
-		speed = 4;
-		damage = 20;
-		sprite = Sprite.bullet_projectile;
+		range = 300;
+		speed = 2;
+		damage = 10;
+		sprite = Sprite.alpha_projectile;
 	}
 	
-	public BulletProjectile(int x, int y, double dir) {
+	public AlphaProjectile(int x, int y, double dir) {
 		super(x, y, dir);
-		range = 200;
-		speed = 4;
-		damage = 20;
-		sprite = Sprite.bullet_projectile;
+		range = 300;
+		speed = 2;
+		damage = 10;
 		
+		sprite = Sprite.alpha_projectile;
 		nx = speed * Math.cos(angle);
 		ny = speed * Math.sin(angle);
 	}
@@ -55,6 +55,4 @@ public class BulletProjectile extends Projectile {
 		dist = Math.sqrt(((xOrigin - x) * (xOrigin - x)) + ((yOrigin - y) * (yOrigin - y)));
 		return dist;
 	}
-
 }
-

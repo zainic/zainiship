@@ -27,6 +27,7 @@ public class Sprite {
 	
 	//Projectile Sprites
 	public static Sprite bullet_projectile = new Sprite(16, 0, 0, SpriteSheet.projectilesheet);
+	public static Sprite alpha_projectile = new Sprite(16, 1, 0, SpriteSheet.projectilesheet);
 	
 	public Sprite(int size, int x, int y, SpriteSheet sheet) {
 		this.SIZE = size;

@@ -26,6 +26,11 @@ public abstract class Mob extends Entity{
 
 	}
 	
+	public void goTo(int posX, int posY) {
+		setX(posX);
+		setY(posY);
+	}
+	
 	public void update() {
 		
 	}
@@ -34,8 +39,8 @@ public abstract class Mob extends Entity{
 
 	}
 	
-	protected void shoot(int x, int y, double dir) {
-		Projectile p = new BulletProjectile(x, y, dir);
+	protected void shoot(int x, int y, double dir, Projectile p) {
+		p.init(x, y, dir);
 		level.addProjectile(p);
 	}
 	

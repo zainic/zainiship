@@ -5,6 +5,7 @@ import com.zainic.zainiship.entity.projectile.BulletProjectile;
 import com.zainic.zainiship.entity.projectile.Projectile;
 import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.input.Keyboard;
+import com.zainic.zainiship.input.Mouse;
 
 public class Player extends Mob{
 	
@@ -12,6 +13,7 @@ public class Player extends Mob{
 	private Sprite sprite;
 	
 	private int fireRate = 0;
+	private int currentMouseX = 0 , currentMouseY = 0;
 	
 	public Player(int x, int y, Keyboard input) {
 		setX(x);
@@ -39,6 +41,11 @@ public class Player extends Mob{
 		}
 		else {
 			moving = false;
+			if (Mouse.isInsideScreen() && (currentMouseX != (int) Mouse.getX()/2 - 16 && currentMouseY != (int) Mouse.getY()/2 - 16)){
+				currentMouseX = (int) Mouse.getX()/2 - 16; 
+				currentMouseY = (int) Mouse.getY()/2 - 16;
+				goTo(currentMouseX, currentMouseY);
+			}
 		}
 		
 		clear();
@@ -55,8 +62,8 @@ public class Player extends Mob{
 	}
 	
 	private void updateShooting() {
-		if (input.space && fireRate <= 0) {
-			shoot(getX() + 8, getY(), -Math.PI/2);
+		if ((input.space || Mouse.getB() == Mouse.LMB) && fireRate <= 0) {
+			shoot(getX() + 8, getY(), -Math.PI/2, new BulletProjectile());
 			fireRate = BulletProjectile.FIRE_RATE;
 		}
 	}
