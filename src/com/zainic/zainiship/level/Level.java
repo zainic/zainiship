@@ -50,10 +50,6 @@ public class Level {
 		
 	}
 	
-	private void time() {
-		
-	}
-	
 	public List<Entity> getEntities() {
 		return entities;
 	}

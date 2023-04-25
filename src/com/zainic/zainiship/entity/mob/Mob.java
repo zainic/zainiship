@@ -1,7 +1,6 @@
 package com.zainic.zainiship.entity.mob;
 
 import com.zainic.zainiship.entity.Entity;
-import com.zainic.zainiship.entity.projectile.BulletProjectile;
 import com.zainic.zainiship.entity.projectile.Projectile;
 import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.graphics.Sprite;

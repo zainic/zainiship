@@ -1,7 +1,6 @@
 package com.zainic.zainiship.entity.mob.enemy;
 
 import com.zainic.zainiship.entity.projectile.AlphaProjectile;
-import com.zainic.zainiship.entity.projectile.Projectile;
 import com.zainic.zainiship.graphics.Sprite;
 
 public class Enemy1 extends Enemy{
