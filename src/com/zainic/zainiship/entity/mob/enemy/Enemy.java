@@ -5,11 +5,30 @@ import com.zainic.zainiship.graphics.Sprite;
 
 public abstract class Enemy extends Mob{
 	
-	protected int health, armor, fireRate;
-	protected int t;
+	protected double x, y;
+	protected double health, armor;
+	protected double speed;
+	protected int fireRate;
+	protected double t;
 	
-	public Enemy(int spawnPointX, int spawnPointY){
+	public Enemy(double spawnPointX, double spawnPointY){
 		goTo(spawnPointX, spawnPointY);
+	}
+	
+	public void goTo(double posX, double posY) {
+		this.x = posX;
+		this.y = posY;
+	}
+	
+	public void move(double xa, double ya) {
+		if (xa != 0 && ya != 0) {
+			move(xa, 0);
+			move(0, ya);
+			return;
+		}
+		
+		this.x = x + xa;
+		this.y = y + ya;
 	}
 	
 	public void update() {
