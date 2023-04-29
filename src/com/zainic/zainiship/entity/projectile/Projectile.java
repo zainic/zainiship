@@ -26,7 +26,7 @@ public abstract class Projectile extends Entity {
 		this.y = y;
 	}
 	
-	public void init(int x, int y, double dir) {
+	public void initPos(int x, int y, double dir) {
 		xOrigin = x;
 		yOrigin = y;
 		angle = dir;

@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.zainic.zainiship.entity.mob.enemy.Enemy1;
+
 public class Level1 extends Level {
 
 	public Level1(String path) {
@@ -30,6 +32,15 @@ public class Level1 extends Level {
 	@Override
 	protected void generateLevel() {
 		
+	}
+	
+	public void addTimeEvent() {
+		if (this.time > 100 && this.time < 1000) {
+			if ((this.time - 100) % 50 == 0) {
+				add(new Enemy1(100, -32, 0));
+				add(new Enemy1(500, -32, 1));
+			}
+		}
 	}
 
 }

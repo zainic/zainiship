@@ -13,6 +13,7 @@ public class Level {
 
 	protected int width, height;
 	protected int[] background;
+	protected int time;
 	
 	private List<Entity> entities = new ArrayList<Entity>();
 	private List<Projectile> projectiles = new ArrayList<Projectile>();
@@ -65,27 +66,44 @@ public class Level {
 		for (int i = 0; i < projectiles.size(); i++) {
 			projectiles.get(i).update();
 		}
+		addTimeEvent();
+		this.time++;
+		clear();
 	}
 	
 	public void render(int xScroll, int yScroll, Screen screen) {
 		//screen.setOffset(xScroll, yScroll);
 		screen.renderBackground(xScroll, yScroll, this);
 		
-		for (int i = 0; i < entities.size(); i++) {
-			entities.get(i).render(screen);
-		}
 		for (int i = 0; i < projectiles.size(); i++) {
 			projectiles.get(i).render(screen);
 		}
+		for (int i = 0; i < entities.size(); i++) {
+			entities.get(i).render(screen);
+		}
+		
+	}
+	
+	private void clear() {
+		for (int i = 0; i < getEntities().size(); i++) {
+			Entity e = getEntities().get(i);
+			if (e.isRemoved()) getEntities().remove(i);
+		}
+		
 	}
 	
 	public void add(Entity e) {
+		e.init(this);
 		entities.add(e);
 	}
 	
 	public void addProjectile(Projectile p) {
 		p.init(this);
 		projectiles.add(p);
+	}
+	
+	public void addTimeEvent() {
+		
 	}
 	
 }

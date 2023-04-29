@@ -26,7 +26,7 @@ public class BulletProjectile extends Projectile {
 		ny = speed * Math.sin(angle);
 	}
 	
-	public void init(int x, int y, double dir) {
+	public void initPos(int x, int y, double dir) {
 		xOrigin = x;
 		yOrigin = y;
 		angle = dir;

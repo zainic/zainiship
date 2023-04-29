@@ -25,6 +25,11 @@ public abstract class Mob extends Entity{
 
 	}
 	
+	public void justMove(int xa, int ya) {
+		setX(getX() + xa);
+		setY(getY() + ya);
+	}
+	
 	public void goTo(int posX, int posY) {
 		setX(posX);
 		setY(posY);
@@ -39,7 +44,7 @@ public abstract class Mob extends Entity{
 	}
 	
 	protected void shoot(int x, int y, double dir, Projectile p) {
-		p.init(x, y, dir);
+		p.initPos(x, y, dir);
 		level.addProjectile(p);
 	}
 	

@@ -1,5 +1,6 @@
 package com.zainic.zainiship.graphics;
 
+import com.zainic.zainiship.entity.mob.enemy.Enemy;
 import com.zainic.zainiship.entity.projectile.Projectile;
 import com.zainic.zainiship.level.Level;
 
@@ -80,6 +81,21 @@ public class Screen {
 				if (xa < -p.getSpriteSize() || xa >= width || ya < 0 || ya >= height) break;
 				if (xa < 0) xa = 0;
 				int col = p.getSprite().pixels[x + y * p.getSpriteSize()];
+				if (col != 0xff160702) pixels[xa + ya * width] = col;
+			}
+		}
+	}
+	
+	public void renderEntity(int xp, int yp, Enemy e) {
+		xp -= xOffset;
+		yp -= yOffset;
+		for (int y = 0; y < e.getSpriteSize(); y++) {
+			int ya = y + yp;
+			for (int x = 0; x < e.getSpriteSize(); x++) {
+				int xa = x + xp;
+				if (xa < -e.getSpriteSize() || xa >= width || ya < 0 || ya >= height) break;
+				if (xa < 0) xa = 0;
+				int col = e.getSprite().pixels[x + y * e.getSpriteSize()];
 				if (col != 0xff160702) pixels[xa + ya * width] = col;
 			}
 		}
