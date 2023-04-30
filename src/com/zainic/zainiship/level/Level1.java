@@ -37,8 +37,8 @@ public class Level1 extends Level {
 	public void addTimeEvent() {
 		if (this.time > 100 && this.time < 1000) {
 			if ((this.time - 100) % 50 == 0) {
-				add(new Enemy1(100, -32, 0));
-				add(new Enemy1(500, -32, 1));
+				add(new Enemy1(100 - 16, -32, 0));
+				add(new Enemy1(500 - 16, -32, 1));
 			}
 		}
 	}

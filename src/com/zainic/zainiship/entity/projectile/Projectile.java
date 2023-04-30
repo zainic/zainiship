@@ -18,14 +18,6 @@ public abstract class Projectile extends Entity {
 		this.yOrigin = 0;
 	}
 	
-	public Projectile(int x, int y, double dir) {
-		xOrigin = x;
-		yOrigin = y;
-		angle = dir;
-		this.x = x;
-		this.y = y;
-	}
-	
 	public void initPos(int x, int y, double dir) {
 		xOrigin = x;
 		yOrigin = y;

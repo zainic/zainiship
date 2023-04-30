@@ -12,18 +12,12 @@ public class AlphaProjectile extends Projectile{
 		range = 300;
 		speed = 2;
 		damage = 10;
-		sprite = Sprite.alpha_projectile;
-	}
-	
-	public AlphaProjectile(int x, int y, double dir) {
-		super(x, y, dir);
-		range = 300;
-		speed = 2;
-		damage = 10;
 		
 		sprite = Sprite.alpha_projectile;
-		nx = speed * Math.cos(angle);
-		ny = speed * Math.sin(angle);
+		this.hitboxAnchorX = 5;
+		this.hitboxAnchorY = 3;
+		this.hitboxSizeX = 6;
+		this.hitboxSizeY = 10;
 	}
 	
 	public void initPos(int x, int y, double dir) {

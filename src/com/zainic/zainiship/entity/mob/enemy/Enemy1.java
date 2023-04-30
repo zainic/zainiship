@@ -34,7 +34,7 @@ public class Enemy1 extends Enemy{
 	
 	private void updateShooting() {
 		if (fireRate <= 0) {
-			shoot((int) this.x + 8, (int) this.y, Math.PI/2, new AlphaProjectile());
+			shoot((int) this.x + 8, (int) this.y + 16, Math.PI/2, new AlphaProjectile());
 			fireRate = AlphaProjectile.FIRE_RATE;
 		}
 	}

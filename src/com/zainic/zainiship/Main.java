@@ -103,8 +103,10 @@ public class Main extends Canvas implements Runnable{
 	
 	public void tick() {
 		key.update();
-		player.update();
-		level.update();
+		if (!key.pause) {
+			player.update();
+			level.update();
+		}
 	}
 	
 	public void render() {

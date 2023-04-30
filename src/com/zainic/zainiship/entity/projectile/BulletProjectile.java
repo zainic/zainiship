@@ -12,18 +12,12 @@ public class BulletProjectile extends Projectile {
 		range = 200;
 		speed = 4;
 		damage = 20;
-		sprite = Sprite.bullet_projectile;
-	}
-	
-	public BulletProjectile(int x, int y, double dir) {
-		super(x, y, dir);
-		range = 200;
-		speed = 4;
-		damage = 20;
-		sprite = Sprite.bullet_projectile;
 		
-		nx = speed * Math.cos(angle);
-		ny = speed * Math.sin(angle);
+		sprite = Sprite.bullet_projectile;
+		this.hitboxAnchorX = 4;
+		this.hitboxAnchorY = 1;
+		this.hitboxSizeX = 8;
+		this.hitboxSizeY = 13;
 	}
 	
 	public void initPos(int x, int y, double dir) {
