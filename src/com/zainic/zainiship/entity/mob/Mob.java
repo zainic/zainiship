@@ -8,6 +8,8 @@ import com.zainic.zainiship.graphics.Sprite;
 public abstract class Mob extends Entity{
 	
 	protected Sprite sprite;
+	protected double health, armor;
+	protected double speed;
 	protected int dir = 0;
 	protected boolean moving = false;
 	

@@ -119,7 +119,7 @@ public class Main extends Canvas implements Runnable{
 		screen.clear();
 		//int xScroll = player.getX() - (screen.width >> 1) + 32;
 		//int yScroll = player.getY() - (screen.height >> 1) + 32;
-		yScroll -= 0.5;
+		yScroll -= 0.2;
 		level.render((int) xScroll, (int) yScroll, screen);
 		player.render(screen);
 		

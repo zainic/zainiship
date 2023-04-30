@@ -13,12 +13,13 @@ public class Player extends Mob{
 	private Sprite sprite;
 	
 	private int fireRate = 0;
-	private int currentMouseX = 0 , currentMouseY = 0;
+//	private int currentMouseX = 0 , currentMouseY = 0;
 	
 	public Player(int x, int y, Keyboard input) {
 		setX(x);
 		setY(y);
 		sprite = Sprite.player_ship32;
+		this.speed = 2;
 		this.hitboxAnchorX = 4;
 		this.hitboxAnchorY = 6;
 		this.hitboxSizeX = 24;
@@ -30,10 +31,10 @@ public class Player extends Mob{
 	public void update() {
 		if (fireRate > 0) fireRate--;
 		int xa = 0, ya = 0;
-		if (input.up) ya-=2;
-		if (input.down) ya+=2;
-		if (input.left) xa-=2;
-		if (input.right) xa+=2;
+		if (input.up) ya -= speed;
+		if (input.down) ya += speed;
+		if (input.left) xa -= speed;
+		if (input.right) xa += speed;
 		
 		if (xa != 0 || ya != 0) {
 			move(xa, ya);
@@ -41,11 +42,11 @@ public class Player extends Mob{
 		}
 		else {
 			moving = false;
-			if (Mouse.isInsideScreen() && (currentMouseX != (int) Mouse.getX()/2 - 16 && currentMouseY != (int) Mouse.getY()/2 - 16)){
-				currentMouseX = (int) Mouse.getX()/2 - 16; 
-				currentMouseY = (int) Mouse.getY()/2 - 16;
-				goTo(currentMouseX, currentMouseY);
-			}
+//			if (Mouse.isInsideScreen() && (currentMouseX != (int) Mouse.getX()/2 - 16 && currentMouseY != (int) Mouse.getY()/2 - 16)){
+//				currentMouseX = (int) Mouse.getX()/2 - 16; 
+//				currentMouseY = (int) Mouse.getY()/2 - 16;
+//				goTo(currentMouseX, currentMouseY);
+//			}
 		}
 		updateShooting();
 
