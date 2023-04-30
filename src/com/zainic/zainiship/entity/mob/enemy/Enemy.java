@@ -11,6 +11,7 @@ public abstract class Enemy extends Mob{
 	
 	public Enemy(double spawnPointX, double spawnPointY){
 		goTo(spawnPointX, spawnPointY);
+		this.friendly = false;
 	}
 	
 	public void goTo(double posX, double posY) {

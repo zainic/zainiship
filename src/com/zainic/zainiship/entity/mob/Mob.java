@@ -12,6 +12,7 @@ public abstract class Mob extends Entity{
 	protected double speed;
 	protected int dir = 0;
 	protected boolean moving = false;
+	protected boolean friendly;
 	
 	public void move(int xa, int ya) {
 		if (xa != 0 && ya != 0) {
@@ -21,20 +22,20 @@ public abstract class Mob extends Entity{
 		}
 		
 		if (!borderCollision(xa, ya, screen)) {
-			setX(getX() + xa);
-			setY(getY() + ya);
+			this.x = x + xa;
+			this.y = y + ya;
 		}
 
 	}
 	
 	public void justMove(int xa, int ya) {
-		setX(getX() + xa);
-		setY(getY() + ya);
+		this.x = x + xa;
+		this.y = y + ya;
 	}
 	
 	public void goTo(int posX, int posY) {
-		setX(posX);
-		setY(posY);
+		this.x = posX;
+		this.y = posY;
 	}
 	
 	public void update() {
@@ -57,8 +58,8 @@ public abstract class Mob extends Entity{
 	
 	private boolean borderCollision(int xa, int ya, Screen screen) {
 		boolean solid = false;
-		int xt = getX() + xa;
-		int yt = getY() + ya;
+		int xt = x + xa;
+		int yt = y + ya;
 		int left = 0 - this.hitboxAnchorX;
 		int top = 0 - this.hitboxAnchorY;
 		int right = screen.width - (this.hitboxAnchorX + this.hitboxSizeX) + 1;
@@ -67,6 +68,10 @@ public abstract class Mob extends Entity{
 			solid = true;
 		}
 		return solid;
+	}
+	
+	public void destroy() {
+		
 	}
 
 }
