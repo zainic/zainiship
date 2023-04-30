@@ -43,9 +43,14 @@ public abstract class Mob extends Entity{
 
 	}
 	
-	protected void shoot(int x, int y, double dir, Projectile p) {
+	protected void shoot(int x, int y, double dir, Projectile p, boolean friendly) {
 		p.initPos(x, y, dir);
-		level.addProjectile(p);
+		if (friendly) {
+			level.addAlliesProjectile(p);
+		}
+		else {
+			level.addEnemiesProjectile(p);
+		}
 	}
 	
 	private boolean borderCollision(int xa, int ya, Screen screen) {

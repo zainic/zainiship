@@ -140,7 +140,8 @@ public class Main extends Canvas implements Runnable{
 		g.drawString("Inside : " + Mouse.isInsideScreen(), 10, 20);
 		g.drawString("loc : " + "(" + Mouse.getX() + ", " + Mouse.getY() + ")", 10, 30);
 		g.drawString("Entity : " + level.getEntities().size(), 10, 40);
-		g.drawString("Projectile : " + level.getProjectiles().size(), 10, 50);
+		g.drawString("Allies Projectile : " + level.getAlliesProjectiles().size(), 10, 50);
+		g.drawString("Enemies Projectile : " + level.getEnemiesProjectiles().size(), 10, 60);
 		g.dispose(); //remove the graphics after not used
 		bs.show(); //show the buffer that being calculated
 	}

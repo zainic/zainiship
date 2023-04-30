@@ -47,23 +47,14 @@ public class Player extends Mob{
 				goTo(currentMouseX, currentMouseY);
 			}
 		}
-		
-		clear();
 		updateShooting();
 
 	}
 	
-	private void clear() {
-		for (int i = 0; i < level.getProjectiles().size(); i++) {
-			Projectile p = level.getProjectiles().get(i);
-			if (p.isRemoved()) level.getProjectiles().remove(i);
-		}
-		
-	}
 	
 	private void updateShooting() {
 		if ((input.space || Mouse.getB() == Mouse.LMB) && fireRate <= 0) {
-			shoot(getX() + 8, getY(), -Math.PI/2, new BulletProjectile());
+			shoot(getX() + 8, getY(), -Math.PI/2, new BulletProjectile(), true);
 			fireRate = BulletProjectile.FIRE_RATE;
 		}
 	}

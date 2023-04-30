@@ -16,7 +16,8 @@ public class Level {
 	protected int time;
 	
 	private List<Entity> entities = new ArrayList<Entity>();
-	private List<Projectile> projectiles = new ArrayList<Projectile>();
+	private List<Projectile> alliesProjectiles = new ArrayList<Projectile>();
+	private List<Projectile> enemiesProjectiles = new ArrayList<Projectile>();
 	
 	public static Level level1 = new Level1("/levels/level1/background.png");
 	
@@ -55,16 +56,23 @@ public class Level {
 		return entities;
 	}
 	
-	public List<Projectile> getProjectiles() {
-		return projectiles;
+	public List<Projectile> getAlliesProjectiles() {
+		return alliesProjectiles;
+	}
+	
+	public List<Projectile> getEnemiesProjectiles() {
+		return enemiesProjectiles;
 	}
 	
 	public void update() {
 		for (int i = 0; i < entities.size(); i++) {
 			entities.get(i).update();
 		}
-		for (int i = 0; i < projectiles.size(); i++) {
-			projectiles.get(i).update();
+		for (int i = 0; i < alliesProjectiles.size(); i++) {
+			alliesProjectiles.get(i).update();
+		}
+		for (int i = 0; i < enemiesProjectiles.size(); i++) {
+			enemiesProjectiles.get(i).update();
 		}
 		addTimeEvent();
 		this.time++;
@@ -75,8 +83,11 @@ public class Level {
 		//screen.setOffset(xScroll, yScroll);
 		screen.renderBackground(xScroll, yScroll, this);
 		
-		for (int i = 0; i < projectiles.size(); i++) {
-			projectiles.get(i).render(screen);
+		for (int i = 0; i < alliesProjectiles.size(); i++) {
+			alliesProjectiles.get(i).render(screen);
+		}
+		for (int i = 0; i < enemiesProjectiles.size(); i++) {
+			enemiesProjectiles.get(i).render(screen);
 		}
 		for (int i = 0; i < entities.size(); i++) {
 			entities.get(i).render(screen);
@@ -89,6 +100,14 @@ public class Level {
 			Entity e = getEntities().get(i);
 			if (e.isRemoved()) getEntities().remove(i);
 		}
+		for (int i = 0; i < getAlliesProjectiles().size(); i++) {
+			Projectile p = getAlliesProjectiles().get(i);
+			if (p.isRemoved()) getAlliesProjectiles().remove(i);
+		}
+		for (int i = 0; i < getEnemiesProjectiles().size(); i++) {
+			Projectile p = getEnemiesProjectiles().get(i);
+			if (p.isRemoved()) getEnemiesProjectiles().remove(i);
+		}
 		
 	}
 	
@@ -97,9 +116,14 @@ public class Level {
 		entities.add(e);
 	}
 	
-	public void addProjectile(Projectile p) {
+	public void addAlliesProjectile(Projectile p) {
 		p.init(this);
-		projectiles.add(p);
+		alliesProjectiles.add(p);
+	}
+	
+	public void addEnemiesProjectile(Projectile p) {
+		p.init(this);
+		enemiesProjectiles.add(p);
 	}
 	
 	public void addTimeEvent() {
