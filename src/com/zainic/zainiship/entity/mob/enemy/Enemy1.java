@@ -18,7 +18,7 @@ public class Enemy1 extends Enemy{
 		this.hitboxSizeY = 25;
 		this.path = path;
 		this.mobSpeed = 0.5;
-		this.mobDamage = 100;
+		this.mobDamage = 20;
 		this.health = 100;
 		this.armor = 0.0;
 		this.fireRate = AlphaProjectile.FIRE_RATE;
@@ -30,6 +30,10 @@ public class Enemy1 extends Enemy{
 		if (path == 1) move(Path.pathOneRightX(t), Path.pathOneRightY(t));
 		t++;
 		if (t > 200) remove();
+		checkHit();
+		if (health <= 0) {
+			remove();
+		}
 		updateShooting();
 	}
 	

@@ -19,6 +19,7 @@ public class Player extends Mob{
 		this.y = y;
 		this.sprite = Sprite.player_ship32;
 		this.mobSpeed = 2;
+		this.mobDamage = 100;
 		this.health = 100;
 		this.armor = 0;
 		this.friendly = true;
@@ -51,11 +52,10 @@ public class Player extends Mob{
 //			}
 		}
 		
-		if (health <= 0) {
-			destroy();
-		}
-		
 		checkHit();
+		if (health <= 0) {
+			remove();
+		}
 		updateShooting();
 
 	}

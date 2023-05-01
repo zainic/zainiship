@@ -167,14 +167,12 @@ public abstract class Mob extends Entity{
 			Mob e = level.getEnemiesMob().get(i);
 			if (getHitStatusBy(e, false)) {
 				health -= e.getMobDamage();
-				e.remove();
 			}
 		}
 		for (int i = 0; i < level.getAlliesMob().size(); i++) {
 			Mob e = level.getAlliesMob().get(i);
 			if (getHitStatusBy(e, true)) {
 				health -= e.getMobDamage();
-				e.remove();
 			}
 		}
 	}

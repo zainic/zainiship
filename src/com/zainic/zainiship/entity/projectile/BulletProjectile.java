@@ -11,7 +11,7 @@ public class BulletProjectile extends Projectile {
 		super();
 		range = 200;
 		speed = 3;
-		damage = 20;
+		damage = 50;
 		
 		sprite = Sprite.bullet_projectile;
 		this.hitboxAnchorX = 4;
