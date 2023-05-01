@@ -30,19 +30,19 @@ public class Path {
 	
 	// -- Path 3 ------------------------------------------------
 	public static double pathThreeLeftX(double t) {
-		return 3*Math.sin(t*0.1);
+		return 3*Math.sin(t*0.05);
 	}
 	
 	public static double pathThreeLeftY(double t) {
-		return 1;
+		return 2;
 	}
 	
 	public static double pathThreeRightX(double t) {
-		return -3*Math.sin(t*0.1);
+		return -3*Math.sin(t*0.05);
 	}
 	
 	public static double pathThreeRightY(double t) {
-		return 1;
+		return 2;
 	}
 	
 }

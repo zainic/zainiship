@@ -6,6 +6,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import com.zainic.zainiship.entity.mob.enemy.Enemy1;
+import com.zainic.zainiship.entity.mob.enemy.Enemy2;
+import com.zainic.zainiship.entity.mob.enemy.Enemy3;
 
 public class Level1 extends Level {
 
@@ -35,10 +37,28 @@ public class Level1 extends Level {
 	}
 	
 	public void addTimeEvent() {
-		if (this.time > 100 && this.time < 1000) {
-			if ((this.time - 100) % 50 == 0) {
+		if (this.time > 100 && this.time <= 1000) {
+			if ((this.time - 100) % 100 == 0) {
 				addEnemiesMob(new Enemy1(100 - 16, -32, 0));
 				addEnemiesMob(new Enemy1(500 - 16, -32, 1));
+			}
+		}
+		if (this.time > 1300 && this.time <= 2050) {
+			if ((this.time - 1000) % 150 == 0) {
+				addEnemiesMob(new Enemy2(50 - 16, -32, 0));
+				addEnemiesMob(new Enemy2(550 - 16, -32, 0));
+				addEnemiesMob(new Enemy2(100 - 16, -32, 0));
+				addEnemiesMob(new Enemy2(500 - 16, -32, 0));
+				addEnemiesMob(new Enemy2(150 - 16, -32, 0));
+				addEnemiesMob(new Enemy2(450 - 16, -32, 0));
+			}
+		}
+		if (this.time > 2200 && this.time <= 3000) {
+			if ((this.time - 2200) % 32 == 0) {
+				addEnemiesMob(new Enemy3(100 - 16, -32, 0));
+				addEnemiesMob(new Enemy3(200 - 16, -32, 1));
+				addEnemiesMob(new Enemy3(400 - 16, -32, 0));
+				addEnemiesMob(new Enemy3(500 - 16, -32, 1));
 			}
 		}
 	}

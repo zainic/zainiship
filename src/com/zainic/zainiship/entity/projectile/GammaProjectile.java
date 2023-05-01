@@ -9,7 +9,7 @@ public class GammaProjectile extends Projectile{
 	
 	public GammaProjectile() {
 		super();
-		range = 200;
+		range = 500;
 		speed = 2;
 		damage = 10;
 		
