@@ -26,6 +26,18 @@ public abstract class Projectile extends Entity {
 		this.y = y;
 	}
 	
+	public double getDamage() {
+		return damage;
+	}
+	
+	public double getRange() {
+		return range;
+	}
+	
+	public double getSpeed() {
+		return speed;
+	}
+	
 	public Sprite getSprite() {
 		return sprite;
 	}

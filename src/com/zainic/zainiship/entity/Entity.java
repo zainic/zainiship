@@ -21,6 +21,38 @@ public abstract class Entity {
 		this.level = level;
 	}
 	
+	public int getX() {
+		return this.x;
+	}
+	
+	public int getY() {
+		return this.y;
+	}
+	
+	public int getHitboxAnchorX() {
+		return this.hitboxAnchorX;
+	}
+	
+	public int getHitboxAnchorY() {
+		return this.hitboxAnchorY;
+	}
+	
+	public int getHitboxSizeX() {
+		return this.hitboxSizeX;
+	}
+	
+	public int getHitboxSizeY() {
+		return this.hitboxSizeY;
+	}
+	
+	public void setX(int posX) {
+		this.x = posX;
+	}
+	
+	public void setY(int posY) {
+		this.y = posY;
+	}
+	
 	public void update() {
 		
 	}

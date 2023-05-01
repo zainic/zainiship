@@ -48,6 +48,7 @@ public class Main extends Canvas implements Runnable{
 		key = new Keyboard();
 		player = new Player((width >> 1) - 16, (height >> 1) - 16, key);
 		player.init(level, screen);
+		level.addAlliesMob(player);
 		
 		Mouse mouse = new Mouse();
 		this.addKeyListener(key);
@@ -104,7 +105,6 @@ public class Main extends Canvas implements Runnable{
 	public void tick() {
 		key.update();
 		if (!key.pause) {
-			player.update();
 			level.update();
 		}
 	}
@@ -139,9 +139,13 @@ public class Main extends Canvas implements Runnable{
 		g.drawString("Button : " + Mouse.getB(), 10, 10);
 		g.drawString("Inside : " + Mouse.isInsideScreen(), 10, 20);
 		g.drawString("loc : " + "(" + Mouse.getX() + ", " + Mouse.getY() + ")", 10, 30);
-		g.drawString("Entity : " + level.getEntities().size(), 10, 40);
-		g.drawString("Allies Projectile : " + level.getAlliesProjectiles().size(), 10, 50);
-		g.drawString("Enemies Projectile : " + level.getEnemiesProjectiles().size(), 10, 60);
+		g.drawString("Allies Entity : " + level.getAlliesEntities().size(), 10, 40);
+		g.drawString("Enemies Entity : " + level.getEnemiesEntities().size(), 10, 50);
+		g.drawString("Allies Mob : " + level.getAlliesMob().size(), 10, 60);
+		g.drawString("Enemies Mob : " + level.getEnemiesMob().size(), 10, 70);
+		g.drawString("Allies Projectile : " + level.getAlliesProjectiles().size(), 10, 80);
+		g.drawString("Enemies Projectile : " + level.getEnemiesProjectiles().size(), 10, 90);
+		g.drawString("Health : " + player.getHealth(), 10, 100);
 		g.dispose(); //remove the graphics after not used
 		bs.show(); //show the buffer that being calculated
 	}

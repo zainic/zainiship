@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.zainic.zainiship.level.Level;
 import com.zainic.zainiship.entity.Entity;
+import com.zainic.zainiship.entity.mob.Mob;
 import com.zainic.zainiship.entity.projectile.Projectile;
 import com.zainic.zainiship.graphics.Screen;
 
@@ -15,7 +16,10 @@ public class Level {
 	protected int[] background;
 	protected int time;
 	
-	private List<Entity> entities = new ArrayList<Entity>();
+	private List<Entity> alliesEntities = new ArrayList<Entity>();
+	private List<Entity> enemiesEntities = new ArrayList<Entity>();
+	private List<Mob> alliesMob = new ArrayList<Mob>();
+	private List<Mob> enemiesMob = new ArrayList<Mob>();
 	private List<Projectile> alliesProjectiles = new ArrayList<Projectile>();
 	private List<Projectile> enemiesProjectiles = new ArrayList<Projectile>();
 	
@@ -52,8 +56,20 @@ public class Level {
 		
 	}
 	
-	public List<Entity> getEntities() {
-		return entities;
+	public List<Entity> getAlliesEntities() {
+		return alliesEntities;
+	}
+	
+	public List<Entity> getEnemiesEntities() {
+		return enemiesEntities;
+	}
+	
+	public List<Mob> getAlliesMob() {
+		return alliesMob;
+	}
+	
+	public List<Mob> getEnemiesMob() {
+		return enemiesMob;
 	}
 	
 	public List<Projectile> getAlliesProjectiles() {
@@ -65,14 +81,11 @@ public class Level {
 	}
 	
 	public void update() {
-		for (int i = 0; i < entities.size(); i++) {
-			entities.get(i).update();
+		for (int i = 0; i < alliesEntities.size(); i++) {
+			alliesEntities.get(i).update();
 		}
-		for (int i = 0; i < alliesProjectiles.size(); i++) {
-			alliesProjectiles.get(i).update();
-		}
-		for (int i = 0; i < enemiesProjectiles.size(); i++) {
-			enemiesProjectiles.get(i).update();
+		for (int i = 0; i < enemiesEntities.size(); i++) {
+			enemiesEntities.get(i).update();
 		}
 		addTimeEvent();
 		this.time++;
@@ -83,22 +96,31 @@ public class Level {
 		//screen.setOffset(xScroll, yScroll);
 		screen.renderBackground(xScroll, yScroll, this);
 		
-		for (int i = 0; i < alliesProjectiles.size(); i++) {
-			alliesProjectiles.get(i).render(screen);
+		for (int i = 0; i < alliesEntities.size(); i++) {
+			alliesEntities.get(i).render(screen);
 		}
-		for (int i = 0; i < enemiesProjectiles.size(); i++) {
-			enemiesProjectiles.get(i).render(screen);
-		}
-		for (int i = 0; i < entities.size(); i++) {
-			entities.get(i).render(screen);
+		for (int i = 0; i < enemiesEntities.size(); i++) {
+			enemiesEntities.get(i).render(screen);
 		}
 		
 	}
 	
 	private void clear() {
-		for (int i = 0; i < getEntities().size(); i++) {
-			Entity e = getEntities().get(i);
-			if (e.isRemoved()) getEntities().remove(i);
+		for (int i = 0; i < getAlliesEntities().size(); i++) {
+			Entity e = getAlliesEntities().get(i);
+			if (e.isRemoved()) getAlliesEntities().remove(i);
+		}
+		for (int i = 0; i < getEnemiesEntities().size(); i++) {
+			Entity e = getEnemiesEntities().get(i);
+			if (e.isRemoved()) getEnemiesEntities().remove(i);
+		}
+		for (int i = 0; i < getAlliesMob().size(); i++) {
+			Mob e = getAlliesMob().get(i);
+			if (e.isRemoved()) getAlliesMob().remove(i);
+		}
+		for (int i = 0; i < getEnemiesMob().size(); i++) {
+			Mob e = getEnemiesMob().get(i);
+			if (e.isRemoved()) getEnemiesMob().remove(i);
 		}
 		for (int i = 0; i < getAlliesProjectiles().size(); i++) {
 			Projectile p = getAlliesProjectiles().get(i);
@@ -108,21 +130,39 @@ public class Level {
 			Projectile p = getEnemiesProjectiles().get(i);
 			if (p.isRemoved()) getEnemiesProjectiles().remove(i);
 		}
-		
 	}
 	
-	public void add(Entity e) {
+	public void addAllies(Entity e) {
 		e.init(this);
-		entities.add(e);
+		alliesEntities.add(e);
+	}
+	
+	public void addEnemies(Entity e) {
+		e.init(this);
+		enemiesEntities.add(e);
+	}
+	
+	public void addAlliesMob(Mob e) {
+		e.init(this);
+		alliesEntities.add(e);
+		alliesMob.add(e);
+	}
+	
+	public void addEnemiesMob(Mob e) {
+		e.init(this);
+		enemiesEntities.add(e);
+		enemiesMob.add(e);
 	}
 	
 	public void addAlliesProjectile(Projectile p) {
 		p.init(this);
+		alliesEntities.add(p);
 		alliesProjectiles.add(p);
 	}
 	
 	public void addEnemiesProjectile(Projectile p) {
 		p.init(this);
+		enemiesEntities.add(p);
 		enemiesProjectiles.add(p);
 	}
 	

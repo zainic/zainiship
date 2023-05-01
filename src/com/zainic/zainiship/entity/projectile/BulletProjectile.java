@@ -10,7 +10,7 @@ public class BulletProjectile extends Projectile {
 	public BulletProjectile() {
 		super();
 		range = 200;
-		speed = 4;
+		speed = 3;
 		damage = 20;
 		
 		sprite = Sprite.bullet_projectile;

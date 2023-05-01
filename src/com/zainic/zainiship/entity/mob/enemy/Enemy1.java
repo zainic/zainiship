@@ -17,7 +17,7 @@ public class Enemy1 extends Enemy{
 		this.hitboxSizeX = 24;
 		this.hitboxSizeY = 25;
 		this.path = path;
-		this.speed = 0.5;
+		this.mobSpeed = 0.5;
 		this.health = 100.0;
 		this.armor = 0.0;
 		this.fireRate = AlphaProjectile.FIRE_RATE;

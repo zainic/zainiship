@@ -1,7 +1,6 @@
 package com.zainic.zainiship.entity.mob;
 
 import com.zainic.zainiship.graphics.Sprite;
-import com.zainic.zainiship.entity.Entity;
 import com.zainic.zainiship.entity.projectile.BulletProjectile;
 import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.input.Keyboard;
@@ -19,7 +18,7 @@ public class Player extends Mob{
 		this.x = x;
 		this.y = y;
 		this.sprite = Sprite.player_ship32;
-		this.speed = 2;
+		this.mobSpeed = 2;
 		this.health = 100;
 		this.armor = 0;
 		this.friendly = true;
@@ -34,10 +33,10 @@ public class Player extends Mob{
 	public void update() {
 		if (fireRate > 0) fireRate--;
 		int xa = 0, ya = 0;
-		if (input.up) ya -= speed;
-		if (input.down) ya += speed;
-		if (input.left) xa -= speed;
-		if (input.right) xa += speed;
+		if (input.up) ya -= mobSpeed;
+		if (input.down) ya += mobSpeed;
+		if (input.left) xa -= mobSpeed;
+		if (input.right) xa += mobSpeed;
 		
 		if (xa != 0 || ya != 0) {
 			move(xa, ya);
@@ -52,11 +51,11 @@ public class Player extends Mob{
 //			}
 		}
 		
-		
 		if (health <= 0) {
 			destroy();
 		}
 		
+		checkHit();
 		updateShooting();
 
 	}
@@ -73,12 +72,8 @@ public class Player extends Mob{
 		screen.renderPlayer(x, y, sprite);
 	}
 	
-	public boolean getHitStatusBy(Entity e) {
-		return false;
-	}
-	
 	public void destroy() {
-		remove();
+		
 	}
 	
 }
