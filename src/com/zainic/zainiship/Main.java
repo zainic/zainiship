@@ -28,6 +28,10 @@ public class Main extends Canvas implements Runnable{
 	private Thread thread;
 	private JFrame frame;
 	private boolean running = false;
+	private boolean pause = false;
+	private int pauseDelay = 10;
+	private int frames = 0;
+	private int ticks = 0;
 	
 	private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
@@ -76,9 +80,9 @@ public class Main extends Canvas implements Runnable{
 		long lastTime = System.nanoTime();
 		long timer = System.currentTimeMillis();
 		final double ns = 1000000000.0 / 60.0;
-		double delta = 0;
 		int frames = 0;
 		int ticks = 0;
+		double delta = 0;
 		this.requestFocus();
 		while (running) {
 			long now = System.nanoTime();
@@ -95,6 +99,8 @@ public class Main extends Canvas implements Runnable{
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
 				frame.setTitle(title + " | " + ticks + "ups, " + frames + "fps");
+				this.ticks = ticks;
+				this.frames = frames;
 				ticks = 0;
 				frames = 0;
 			}
@@ -104,7 +110,12 @@ public class Main extends Canvas implements Runnable{
 	
 	public void tick() {
 		key.update();
-		if (!key.pause) {
+		if (key.pause && pauseDelay <= 0) {
+			pause = pause ^ true;
+			pauseDelay = 20;
+		}
+		pauseDelay--;
+		if (!pause) {
 			level.update();
 		}
 	}
@@ -135,16 +146,18 @@ public class Main extends Canvas implements Runnable{
 		//g.drawString("X : "+player.x+" Y : "+player.y, 100, 100);
 		//g.fillRect(Mouse.getX() - 5, Mouse.getY() - 5, 10, 10);
 		//g.fillRect(Mouse.getX() - 5, Mouse.getY() - 5, 10, 10);
-		g.drawString("Button : " + Mouse.getB(), 10, 10);
-		g.drawString("Inside : " + Mouse.isInsideScreen(), 10, 20);
-		g.drawString("loc : " + "(" + Mouse.getX() + ", " + Mouse.getY() + ")", 10, 30);
-		g.drawString("Allies Entity : " + level.getAlliesEntities().size(), 10, 40);
-		g.drawString("Enemies Entity : " + level.getEnemiesEntities().size(), 10, 50);
-		g.drawString("Allies Mob : " + level.getAlliesMob().size(), 10, 60);
-		g.drawString("Enemies Mob : " + level.getEnemiesMob().size(), 10, 70);
-		g.drawString("Allies Projectile : " + level.getAlliesProjectiles().size(), 10, 80);
-		g.drawString("Enemies Projectile : " + level.getEnemiesProjectiles().size(), 10, 90);
-		g.drawString("Health : " + player.getHealth(), 10, 100);
+		g.drawString(title + " | " + this.ticks + "ups, " + this.frames + "fps", 10, 15);
+		g.drawString("Button : " + Mouse.getB(), 10, 30);
+		g.drawString("Inside : " + Mouse.isInsideScreen(), 10, 45);
+		g.drawString("loc : " + "(" + Mouse.getX() + ", " + Mouse.getY() + ")", 10, 60);
+		g.drawString("Allies Entity : " + level.getAlliesEntities().size(), 10, 75);
+		g.drawString("Enemies Entity : " + level.getEnemiesEntities().size(), 10, 90);
+		g.drawString("Allies Mob : " + level.getAlliesMob().size(), 10, 105);
+		g.drawString("Enemies Mob : " + level.getEnemiesMob().size(), 10, 120);
+		g.drawString("Allies Projectile : " + level.getAlliesProjectiles().size(), 10, 135);
+		g.drawString("Enemies Projectile : " + level.getEnemiesProjectiles().size(), 10, 150);
+		g.drawString("Health : " + player.getHealth(), 10, 165);
+		g.drawString("Pause : " + pause, 10, 180);
 		g.dispose(); //remove the graphics after not used
 		bs.show(); //show the buffer that being calculated
 	}

@@ -1,10 +1,5 @@
 package com.zainic.zainiship.entity.mob;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 import com.zainic.zainiship.entity.Entity;
 import com.zainic.zainiship.entity.projectile.Projectile;
 import com.zainic.zainiship.graphics.Screen;
