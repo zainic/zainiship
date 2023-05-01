@@ -63,13 +63,13 @@ public class Player extends Mob{
 	
 	private void updateShooting() {
 		if ((input.space || Mouse.getB() == Mouse.LMB) && fireRate <= 0) {
-			shoot(x + 8, y, -Math.PI/2, new BulletProjectile(), friendly);
+			shoot((int) x + 8, (int) y, -Math.PI/2, new BulletProjectile(), friendly);
 			fireRate = BulletProjectile.FIRE_RATE;
 		}
 	}
 	
 	public void render(Screen screen) {
-		screen.renderPlayer(x, y, sprite);
+		screen.renderPlayer((int) x, (int) y, sprite);
 	}
 	
 	public void destroy() {

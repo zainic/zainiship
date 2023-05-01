@@ -6,7 +6,7 @@ import com.zainic.zainiship.level.Level;
 public abstract class Entity {
 	
 	private boolean removed = false;
-	protected int x, y;
+	protected double x, y;
 	protected Level level;
 	protected Screen screen;
 	protected int hitboxAnchorX, hitboxAnchorY;
@@ -21,11 +21,11 @@ public abstract class Entity {
 		this.level = level;
 	}
 	
-	public int getX() {
+	public double getX() {
 		return this.x;
 	}
 	
-	public int getY() {
+	public double getY() {
 		return this.y;
 	}
 	

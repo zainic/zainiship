@@ -20,7 +20,7 @@ public class AlphaProjectile extends Projectile{
 		this.hitboxSizeY = 10;
 	}
 	
-	public void initPos(int x, int y, double dir) {
+	public void initPos(double x, double y, double dir) {
 		xOrigin = x;
 		yOrigin = y;
 		angle = dir;
@@ -38,15 +38,4 @@ public class AlphaProjectile extends Projectile{
 		screen.renderProjectile((int) x, (int) y, this);
 	}
 	
-	protected void move() {
-		x += nx;
-		y += ny;
-		if (distance() > range) remove();
-	}
-	
-	private double distance() {
-		double dist = 0;
-		dist = Math.sqrt(((xOrigin - x) * (xOrigin - x)) + ((yOrigin - y) * (yOrigin - y)));
-		return dist;
-	}
 }

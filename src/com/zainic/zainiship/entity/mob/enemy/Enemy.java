@@ -5,7 +5,6 @@ import com.zainic.zainiship.graphics.Sprite;
 
 public abstract class Enemy extends Mob{
 	
-	protected double x, y;
 	protected int fireRate;
 	protected double t;
 	

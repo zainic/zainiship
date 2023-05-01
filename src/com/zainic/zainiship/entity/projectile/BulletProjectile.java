@@ -20,7 +20,7 @@ public class BulletProjectile extends Projectile {
 		this.hitboxSizeY = 13;
 	}
 	
-	public void initPos(int x, int y, double dir) {
+	public void initPos(double x, double y, double dir) {
 		xOrigin = x;
 		yOrigin = y;
 		angle = dir;

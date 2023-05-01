@@ -1,5 +1,10 @@
 package com.zainic.zainiship.entity.mob;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import com.zainic.zainiship.entity.Entity;
 import com.zainic.zainiship.entity.projectile.Projectile;
 import com.zainic.zainiship.graphics.Screen;
@@ -74,8 +79,8 @@ public abstract class Mob extends Entity{
 	
 	private boolean borderCollision(int xa, int ya, Screen screen) {
 		boolean solid = false;
-		int xt = x + xa;
-		int yt = y + ya;
+		int xt = (int) x + xa;
+		int yt = (int) y + ya;
 		int left = 0 - this.hitboxAnchorX;
 		int top = 0 - this.hitboxAnchorY;
 		int right = screen.width - (this.hitboxAnchorX + this.hitboxSizeX) + 1;
@@ -89,6 +94,20 @@ public abstract class Mob extends Entity{
 	public boolean getHitStatusBy(Entity e, boolean allies) {
 		boolean hitX, hitY;
 		if (friendly ^ allies) {
+//			Set<Integer> itsX = new HashSet<Integer>();
+//			Set<Integer> itsY = new HashSet<Integer>();
+//			Set<Integer> thatsX = new HashSet<Integer>();
+//			Set<Integer> thatsY = new HashSet<Integer>();
+//			itsX.addAll(IntStream.rangeClosed((int) x + hitboxAnchorX, (int) x + hitboxAnchorX + hitboxSizeX).boxed().collect(Collectors.toList()));
+//			itsY.addAll(IntStream.rangeClosed((int) y + hitboxAnchorY, (int) y + hitboxAnchorY + hitboxSizeY).boxed().collect(Collectors.toList()));
+//			thatsX.addAll(IntStream.rangeClosed((int) e.getX() + e.getHitboxAnchorX(), (int) e.getX() + e.getHitboxAnchorX() + e.getHitboxSizeX()).boxed().collect(Collectors.toList()));
+//			thatsY.addAll(IntStream.rangeClosed((int) e.getY() + e.getHitboxAnchorY(), (int) e.getY() + e.getHitboxAnchorY() + e.getHitboxSizeY()).boxed().collect(Collectors.toList()));
+//			Set<Integer> xIntersection = new HashSet<Integer>(itsX);
+//			Set<Integer> yIntersection = new HashSet<Integer>(itsY);
+//			xIntersection.retainAll(thatsX);
+//			yIntersection.retainAll(thatsY);
+//			hitX = !xIntersection.isEmpty();
+//			hitY = !yIntersection.isEmpty();
 			if (x < e.getX()){
 				if (x + hitboxAnchorX + hitboxSizeX - e.getX() - e.getHitboxAnchorX() > 0) {
 					hitX = true;
@@ -134,24 +153,28 @@ public abstract class Mob extends Entity{
 			Projectile p = level.getEnemiesProjectiles().get(i);
 			if (getHitStatusBy(p, false)) {
 				health -= p.getDamage();
+				p.remove();
 			}
 		}
 		for (int i = 0; i < level.getAlliesProjectiles().size(); i++) {
 			Projectile p = level.getAlliesProjectiles().get(i);
 			if (getHitStatusBy(p, true)) {
 				health -= p.getDamage();
+				p.remove();
 			}
 		}
 		for (int i = 0; i < level.getEnemiesMob().size(); i++) {
 			Mob e = level.getEnemiesMob().get(i);
 			if (getHitStatusBy(e, false)) {
 				health -= e.getMobDamage();
+				e.remove();
 			}
 		}
 		for (int i = 0; i < level.getAlliesMob().size(); i++) {
 			Mob e = level.getAlliesMob().get(i);
 			if (getHitStatusBy(e, true)) {
 				health -= e.getMobDamage();
+				e.remove();
 			}
 		}
 	}

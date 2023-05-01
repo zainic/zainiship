@@ -5,10 +5,9 @@ import com.zainic.zainiship.graphics.Sprite;
 
 public abstract class Projectile extends Entity {
 	
-	protected int xOrigin, yOrigin;
+	protected double xOrigin, yOrigin;
 	protected double angle;
 	protected Sprite sprite;
-	protected double x, y;
 	protected double nx, ny;
 	protected double distance;
 	protected double speed, range, damage;
@@ -18,12 +17,16 @@ public abstract class Projectile extends Entity {
 		this.yOrigin = 0;
 	}
 	
-	public void initPos(int x, int y, double dir) {
+	public void initPos(double x, double y, double dir) {
 		xOrigin = x;
 		yOrigin = y;
 		angle = dir;
 		this.x = x;
 		this.y = y;
+	}
+	
+	public double getX() {
+		return this.x;
 	}
 	
 	public double getDamage() {
@@ -47,8 +50,15 @@ public abstract class Projectile extends Entity {
 	}
 	
 	protected void move() {
-		
+		x += nx;
+		y += ny;
+		if (distance() > range) remove();
 	}
 	
-
+	private double distance() {
+		double dist = 0;
+		dist = Math.sqrt(((xOrigin - x) * (xOrigin - x)) + ((yOrigin - y) * (yOrigin - y)));
+		return dist;
+	}
+	
 }
