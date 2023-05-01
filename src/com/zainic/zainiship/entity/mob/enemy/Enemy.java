@@ -25,8 +25,8 @@ public abstract class Enemy extends Mob{
 			return;
 		}
 		
-		this.x = x + xa;
-		this.y = y + ya;
+		this.x = x + mobSpeed*xa;
+		this.y = y + mobSpeed*ya;
 	}
 	
 	public void update() {

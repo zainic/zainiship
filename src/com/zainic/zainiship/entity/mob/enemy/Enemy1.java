@@ -28,7 +28,7 @@ public class Enemy1 extends Enemy{
 		if (fireRate > 0) fireRate--;
 		if (path == 0) move(Path.pathOneLeftX(t), Path.pathOneLeftY(t));
 		if (path == 1) move(Path.pathOneRightX(t), Path.pathOneRightY(t));
-		t++;
+		t += mobSpeed;
 		if (t > 200) remove();
 		checkHit();
 		if (health <= 0) {
