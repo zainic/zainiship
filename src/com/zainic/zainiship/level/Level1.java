@@ -54,7 +54,7 @@ public class Level1 extends Level {
 			}
 		}
 		if (this.time > 2200 && this.time <= 3000) {
-			if ((this.time - 2200) % 32 == 0) {
+			if ((this.time - 2200) % 100 == 0) {
 				addEnemiesMob(new Enemy3(100 - 16, -32, 0));
 				addEnemiesMob(new Enemy3(200 - 16, -32, 1));
 				addEnemiesMob(new Enemy3(400 - 16, -32, 0));

@@ -28,11 +28,11 @@ public class Enemy2 extends Enemy{
 		if (fireRate > 0) fireRate--;
 		if (path == 0) move(Path.pathTwoX(t), Path.pathTwoY(t));
 		t += mobSpeed;
-		if (t > 200) remove();
 		checkHit();
 		if (health <= 0) {
 			remove();
 		}
+		if (isOutsideScreen() && t > 50) remove();
 		updateShooting();
 	}
 	

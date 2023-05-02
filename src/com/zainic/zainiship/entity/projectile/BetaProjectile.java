@@ -5,12 +5,12 @@ import com.zainic.zainiship.graphics.Sprite;
 
 public class BetaProjectile extends Projectile{
 	
-	public static final int FIRE_RATE = 50;
+	public static final int FIRE_RATE = 40;
 	
 	public BetaProjectile() {
 		super();
 		range = 500;
-		speed = 4;
+		speed = 6;
 		damage = 20;
 		
 		sprite = Sprite.beta_projectile;

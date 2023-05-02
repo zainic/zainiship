@@ -37,18 +37,6 @@ public class BulletProjectile extends Projectile {
 	public void render(Screen screen) {
 		screen.renderProjectile((int) x, (int) y, this);
 	}
-	
-	protected void move() {
-		x += nx;
-		y += ny;
-		if (distance() > range) remove();
-	}
-	
-	private double distance() {
-		double dist = 0;
-		dist = Math.sqrt(((xOrigin - x) * (xOrigin - x)) + ((yOrigin - y) * (yOrigin - y)));
-		return dist;
-	}
 
 }
 

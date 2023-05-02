@@ -5,7 +5,7 @@ import com.zainic.zainiship.graphics.Sprite;
 
 public class GammaProjectile extends Projectile{
 	
-	public static final int FIRE_RATE = 40;
+	public static final int FIRE_RATE = 50;
 	
 	public GammaProjectile() {
 		super();

@@ -29,17 +29,26 @@ public class Enemy3 extends Enemy{
 		if (path == 0) move(Path.pathThreeLeftX(t), Path.pathThreeLeftY(t));
 		if (path == 1) move(Path.pathThreeRightX(t), Path.pathThreeRightY(t));
 		t += mobSpeed;
-		if (t > 300) remove();
 		checkHit();
 		if (health <= 0) {
 			remove();
 		}
+		if (isOutsideScreen() && t > 50) remove();
 		updateShooting();
 	}
 	
 	private void updateShooting() {
 		if (fireRate <= 0) {
-			shoot((int) this.x + 8, (int) this.y + 16, Math.PI/2, new GammaProjectile(), friendly);
+			double angleTarget;
+			if (level.getAlliesMob().size() > 0) {
+				double xTarget = (level.getAlliesMob().get(level.getAlliesMob().size() - 1).getX() - 16) - (this.x - 16);
+				double yTarget = (level.getAlliesMob().get(level.getAlliesMob().size() - 1).getY() - 16) - (this.y - 16);
+				angleTarget = Math.atan2(yTarget, xTarget);
+			}
+			else {
+				angleTarget = Math.PI/2;
+			}
+			shoot((int) this.x + 8, (int) this.y + 16, angleTarget, new GammaProjectile(), friendly);
 			fireRate = GammaProjectile.FIRE_RATE;
 		}
 	}

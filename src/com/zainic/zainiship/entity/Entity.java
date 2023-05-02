@@ -61,6 +61,13 @@ public abstract class Entity {
 		
 	}
 	
+	public boolean isOutsideScreen() {
+		if (x < - hitboxAnchorX - hitboxSizeX || y < - hitboxAnchorY - hitboxSizeY || x > screen.width - hitboxAnchorX || y > screen.height - hitboxAnchorY) {
+			return true; 
+		}
+		return false;
+	}
+	
 	public void remove() {
 		removed = true;
 	}

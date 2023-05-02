@@ -29,11 +29,11 @@ public class Enemy1 extends Enemy{
 		if (path == 0) move(Path.pathOneLeftX(t), Path.pathOneLeftY(t));
 		if (path == 1) move(Path.pathOneRightX(t), Path.pathOneRightY(t));
 		t += mobSpeed;
-		if (t > 200) remove();
 		checkHit();
 		if (health <= 0) {
 			remove();
 		}
+		if (isOutsideScreen() && t > 50) remove();
 		updateShooting();
 	}
 	

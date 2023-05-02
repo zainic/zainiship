@@ -15,6 +15,7 @@ public class Level {
 	protected int width, height;
 	protected int[] background;
 	protected int time;
+	protected Screen screen;
 	
 	private List<Entity> alliesEntities = new ArrayList<Entity>();
 	private List<Entity> enemiesEntities = new ArrayList<Entity>();
@@ -34,6 +35,10 @@ public class Level {
 	public Level(String path) {
 		loadLevel(path);
 		generateLevel();
+	}
+	
+	public void init(Screen screen) {
+		this.screen = screen;
 	}
 	
 	public int getWidth() {
@@ -96,10 +101,10 @@ public class Level {
 		//screen.setOffset(xScroll, yScroll);
 		screen.renderBackground(xScroll, yScroll, this);
 		
-		for (int i = 0; i < alliesEntities.size(); i++) {
+		for (int i = alliesEntities.size() - 1; i >= 0 ; i--) {
 			alliesEntities.get(i).render(screen);
 		}
-		for (int i = 0; i < enemiesEntities.size(); i++) {
+		for (int i = enemiesEntities.size() - 1; i >= 0 ; i--) {
 			enemiesEntities.get(i).render(screen);
 		}
 		
@@ -133,35 +138,35 @@ public class Level {
 	}
 	
 	public void addAllies(Entity e) {
-		e.init(this);
+		e.init(this, screen);
 		alliesEntities.add(e);
 	}
 	
 	public void addEnemies(Entity e) {
-		e.init(this);
+		e.init(this, screen);
 		enemiesEntities.add(e);
 	}
 	
 	public void addAlliesMob(Mob e) {
-		e.init(this);
+		e.init(this, screen);
 		alliesEntities.add(e);
 		alliesMob.add(e);
 	}
 	
 	public void addEnemiesMob(Mob e) {
-		e.init(this);
+		e.init(this, screen);
 		enemiesEntities.add(e);
 		enemiesMob.add(e);
 	}
 	
 	public void addAlliesProjectile(Projectile p) {
-		p.init(this);
+		p.init(this, screen);
 		alliesEntities.add(p);
 		alliesProjectiles.add(p);
 	}
 	
 	public void addEnemiesProjectile(Projectile p) {
-		p.init(this);
+		p.init(this, screen);
 		enemiesEntities.add(p);
 		enemiesProjectiles.add(p);
 	}
