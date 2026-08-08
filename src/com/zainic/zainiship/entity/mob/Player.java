@@ -15,10 +15,12 @@ public class Player extends Mob{
 //	private int currentMouseX = 0 , currentMouseY = 0;
 	
 	public Player(int x, int y, Keyboard input) {
-		this.x = x;
-		this.y = y;
 		this.sprite = Sprite.player_ship32;
-		this.mobSpeed = 2;
+		this.width = sprite.getWidth();
+		this.height = sprite.getHeight();
+		this.x = x - (this.width / 2);
+		this.y = y - (this.height / 2);
+		this.mobSpeed = 4;
 		this.mobDamage = 100;
 		this.health = 100;
 		this.armor = 0;
@@ -63,7 +65,7 @@ public class Player extends Mob{
 	
 	private void updateShooting() {
 		if ((input.space || Mouse.getB() == Mouse.LMB) && fireRate <= 0) {
-			shoot((int) x + 8, (int) y, -Math.PI/2, new BulletProjectile(), friendly);
+			shoot((int) x + (this.width / 4), (int) y, -Math.PI/2, new BulletProjectile(), friendly);
 			fireRate = BulletProjectile.FIRE_RATE;
 		}
 	}

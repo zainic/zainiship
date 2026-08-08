@@ -14,6 +14,8 @@ public class BulletProjectile extends Projectile {
 		damage = 50;
 		
 		sprite = Sprite.bullet_projectile;
+		this.width = sprite.getWidth();
+		this.height = sprite.getHeight();
 		this.hitboxAnchorX = 4;
 		this.hitboxAnchorY = 1;
 		this.hitboxSizeX = 8;

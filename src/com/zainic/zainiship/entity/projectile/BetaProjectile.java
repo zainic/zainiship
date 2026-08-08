@@ -14,6 +14,8 @@ public class BetaProjectile extends Projectile{
 		damage = 20;
 		
 		sprite = Sprite.beta_projectile;
+		this.width = sprite.getWidth();
+		this.height = sprite.getHeight();
 		this.hitboxAnchorX = 5;
 		this.hitboxAnchorY = 1;
 		this.hitboxSizeX = 6;

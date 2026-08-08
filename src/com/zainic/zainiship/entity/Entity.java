@@ -6,6 +6,7 @@ import com.zainic.zainiship.level.Level;
 public abstract class Entity {
 	
 	private boolean removed = false;
+	protected int width, height;
 	protected double x, y;
 	protected Level level;
 	protected Screen screen;

@@ -23,7 +23,7 @@ public class Sprite {
 	public static Sprite enemy_ship32_3 = new Sprite(32, 0, 2, SpriteSheet.enemyship32);
 	
 	public static Sprite enemy_ship_4 = new Sprite(64, 0, 3, SpriteSheet.enemyship);
-	public static Sprite enemy_ship32_5 = new Sprite(32, 0, 3, SpriteSheet.enemyship32);
+	public static Sprite enemy_ship32_4 = new Sprite(32, 0, 3, SpriteSheet.enemyship32);
 	
 	//Projectile Sprites
 	public static Sprite bullet_projectile = new Sprite(16, 0, 0, SpriteSheet.projectilesheet);

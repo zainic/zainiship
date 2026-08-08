@@ -14,6 +14,8 @@ public class AlphaProjectile extends Projectile{
 		damage = 10;
 		
 		sprite = Sprite.alpha_projectile;
+		this.width = sprite.getWidth();
+		this.height = sprite.getHeight();
 		this.hitboxAnchorX = 5;
 		this.hitboxAnchorY = 3;
 		this.hitboxSizeX = 6;

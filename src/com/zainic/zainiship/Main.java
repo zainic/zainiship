@@ -20,9 +20,9 @@ public class Main extends Canvas implements Runnable{
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static int width = 600;
+	private static int width = 1280;
 	private static int height = width / 16 * 9;
-	private static int scale = 2;
+	private static int scale = 1;
 	private static String title = "Zainiship";
 	
 	private Thread thread;
@@ -51,7 +51,7 @@ public class Main extends Canvas implements Runnable{
 		level = Level.level1;
 		level.init(screen);
 		key = new Keyboard();
-		player = new Player((width >> 1) - 16, (height >> 1) - 16, key);
+		player = new Player((width >> 1), (height >> 1), key);
 		player.init(level, screen);
 		level.addAlliesMob(player);
 		
