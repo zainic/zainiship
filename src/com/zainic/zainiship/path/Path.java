@@ -44,5 +44,14 @@ public class Path {
 	public static double pathThreeRightY(double t) {
 		return 2;
 	}
+
+	// -- Path 4 ------------------------------------------------
+	public static double pathFourX(double t, double angle) {
+		return Math.cos(angle);
+	}
+	
+	public static double pathFourY(double t, double angle) {
+		return Math.sin(angle);
+	}
 	
 }

@@ -68,7 +68,7 @@ public class Player extends Mob{
 		if ((input.space || Mouse.getB() == Mouse.LMB) && fireRate <= 0) {
 			shoot((int) x + (this.width / 4), (int) y, -Math.PI/2, new BulletProjectile(), friendly);
 			// play shooting sound (loaded in Audio.init())
-			if (Audio.SHOOT != null) Audio.SHOOT.play();
+			if (Audio.PLAYER_SHOOT != null) Audio.PLAYER_SHOOT.play();
 			fireRate = BulletProjectile.FIRE_RATE;
 		}
 	}
@@ -79,7 +79,7 @@ public class Player extends Mob{
 	
 	public void destroy() {
 		level.addEffect(new ExplosionEffect(this.x + this.width / 2, this.y + this.height / 2));
-		if (Audio.EXPLOSION != null) Audio.EXPLOSION.play();
+		if (Audio.PLAYER_EXPLOSION != null) Audio.PLAYER_EXPLOSION.play();
 		remove();
 	}
 	
