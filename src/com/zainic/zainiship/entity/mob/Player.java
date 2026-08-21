@@ -1,6 +1,7 @@
 package com.zainic.zainiship.entity.mob;
 
 import com.zainic.zainiship.graphics.Sprite;
+import com.zainic.zainiship.graphics.effect.ExplosionEffect;
 import com.zainic.zainiship.entity.projectile.BulletProjectile;
 import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.input.Keyboard;
@@ -15,6 +16,7 @@ public class Player extends Mob{
 //	private int currentMouseX = 0 , currentMouseY = 0;
 	
 	public Player(int x, int y, Keyboard input) {
+		this.name = "Player";
 		this.sprite = Sprite.player_ship32;
 		this.width = sprite.getWidth();
 		this.height = sprite.getHeight();
@@ -55,9 +57,7 @@ public class Player extends Mob{
 		}
 		
 		checkHit();
-		if (health <= 0) {
-			remove();
-		}
+		checkHealth();
 		updateShooting();
 
 	}
@@ -75,7 +75,8 @@ public class Player extends Mob{
 	}
 	
 	public void destroy() {
-		
+		level.addEffect(new ExplosionEffect(this.x + this.width / 2, this.y + this.height / 2));
+		remove();
 	}
 	
 }

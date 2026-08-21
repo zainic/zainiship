@@ -13,6 +13,7 @@ public class AlphaProjectile extends Projectile{
 		speed = 2;
 		damage = 10;
 		
+		this.name = "AlphaProjectile";
 		sprite = Sprite.alpha_projectile;
 		this.width = sprite.getWidth();
 		this.height = sprite.getHeight();

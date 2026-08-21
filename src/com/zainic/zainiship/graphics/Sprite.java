@@ -4,9 +4,11 @@ public class Sprite {
 	
 	private int x, y;
 	private SpriteSheet sheet;
+	private SpriteEffect effect;
 	private int width, height;
 	public final int SIZE;
 	public int[] pixels;
+	public int totalStates;
 	
 	// Player sprites
 	public static Sprite player_ship = new Sprite(64, 0, 0, SpriteSheet.player);
@@ -32,6 +34,19 @@ public class Sprite {
 	public static Sprite beta_projectile = new Sprite(16, 1, 1, SpriteSheet.projectilesheet);
 	public static Sprite gamma_projectile = new Sprite(16, 1, 2, SpriteSheet.projectilesheet);
 	
+	//Effect Sprites
+	public static Sprite default_explosion_effect = new Sprite(48, SpriteEffect.defaultEnemyExplosion);
+
+	public Sprite(int size, SpriteEffect effect) {
+		this.SIZE = size;
+		this.width = size;
+		this.height = size;
+		this.pixels = new int[SIZE * SIZE];
+		this.x = 0;
+		this.effect = effect;
+		this.totalStates = effect.getTotalStates();
+	}
+
 	public Sprite(int size, int x, int y, SpriteSheet sheet) {
 		this.SIZE = size;
 		this.width = size;
@@ -79,6 +94,18 @@ public class Sprite {
 				pixels[x + y * SIZE] = sheet.pixels[(x + this.x) + (y + this.y) * sheet.SIZE];
 			}
 		}
+	}
+
+	public void loadState(int state) {
+		for (int y = 0; y < SIZE; y++) {
+			for (int x = 0; x < SIZE; x++) {
+				pixels[x + y * SIZE] = effect.pixels[(x + this.x) + (y + (state * effect.SIZE)) * effect.SIZE];
+			}
+		}
+	}
+
+	public int getTotalStates() {
+		return this.totalStates;
 	}
 
 }

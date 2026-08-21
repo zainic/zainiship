@@ -13,6 +13,7 @@ public class BulletProjectile extends Projectile {
 		speed = 3;
 		damage = 50;
 		
+		this.name = "BulletProjectile";
 		sprite = Sprite.bullet_projectile;
 		this.width = sprite.getWidth();
 		this.height = sprite.getHeight();

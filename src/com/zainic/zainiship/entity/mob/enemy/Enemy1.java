@@ -11,6 +11,7 @@ public class Enemy1 extends Enemy{
 	
 	public Enemy1(double spawnPointX, double spawnPointY, int path) {
 		super(spawnPointX, spawnPointY);
+		this.name = "Enemy1";
 		sprite = Sprite.enemy_ship32_1;
 		this.width = sprite.getWidth();
 		this.height = sprite.getHeight();
@@ -33,9 +34,7 @@ public class Enemy1 extends Enemy{
 		if (path == 1) move(Path.pathOneRightX(t), Path.pathOneRightY(t));
 		t += mobSpeed;
 		checkHit();
-		if (health <= 0) {
-			remove();
-		}
+		checkHealth();
 		if (isOutsideScreen() && t > 50) remove();
 		updateShooting();
 	}

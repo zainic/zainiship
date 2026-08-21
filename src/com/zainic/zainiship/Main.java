@@ -157,8 +157,9 @@ public class Main extends Canvas implements Runnable{
 		g.drawString("Enemies Mob : " + level.getEnemiesMob().size(), 10, 120);
 		g.drawString("Allies Projectile : " + level.getAlliesProjectiles().size(), 10, 135);
 		g.drawString("Enemies Projectile : " + level.getEnemiesProjectiles().size(), 10, 150);
-		g.drawString("Health : " + player.getHealth(), 10, 165);
-		g.drawString("Pause : " + pause, 10, 180);
+		g.drawString("Effects : " + level.getEffects().size(), 10, 165);
+		g.drawString("Health : " + player.getHealth(), 10, 180);
+		g.drawString("Pause : " + pause, 10, 195);
 		g.dispose(); //remove the graphics after not used
 		bs.show(); //show the buffer that being calculated
 	}
