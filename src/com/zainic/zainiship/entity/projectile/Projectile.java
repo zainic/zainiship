@@ -28,6 +28,10 @@ public abstract class Projectile extends Entity {
 	public double getX() {
 		return this.x;
 	}
+
+	public double getY() {
+		return this.y;
+	}
 	
 	public double getDamage() {
 		return damage;

@@ -171,9 +171,15 @@ public abstract class Mob extends Entity{
 			}
 		}
 	}
+
+	public void checkHealth() {
+		if (health <= 0) {
+			destroy();
+		}
+	}
 	
 	public void destroy() {
-		remove();
+		
 	}
 
 }

@@ -11,7 +11,11 @@ public class Enemy3 extends Enemy{
 	
 	public Enemy3(double spawnPointX, double spawnPointY, int path) {
 		super(spawnPointX, spawnPointY);
+		this.name = "Enemy3";
 		sprite = Sprite.enemy_ship32_3;
+		this.width = sprite.getWidth();
+		this.height = sprite.getHeight();
+		justMove(-this.width / 2, -this.height / 2);
 		this.hitboxAnchorX = 0;
 		this.hitboxAnchorY = 0;
 		this.hitboxSizeX = 32;
@@ -30,9 +34,7 @@ public class Enemy3 extends Enemy{
 		if (path == 1) move(Path.pathThreeRightX(t), Path.pathThreeRightY(t));
 		t += mobSpeed;
 		checkHit();
-		if (health <= 0) {
-			remove();
-		}
+		checkHealth();
 		if (isOutsideScreen() && t > 50) remove();
 		updateShooting();
 	}
@@ -41,14 +43,14 @@ public class Enemy3 extends Enemy{
 		if (fireRate <= 0) {
 			double angleTarget;
 			if (level.getAlliesMob().size() > 0) {
-				double xTarget = (level.getAlliesMob().get(level.getAlliesMob().size() - 1).getX() - 16) - (this.x - 16);
-				double yTarget = (level.getAlliesMob().get(level.getAlliesMob().size() - 1).getY() - 16) - (this.y - 16);
+				double xTarget = (level.getAlliesMob().get(level.getAlliesMob().size() - 1).getX() - (this.width / 2)) - (this.x - (this.width / 2));
+				double yTarget = (level.getAlliesMob().get(level.getAlliesMob().size() - 1).getY() - (this.height / 2)) - (this.y - (this.height / 2));
 				angleTarget = Math.atan2(yTarget, xTarget);
 			}
 			else {
 				angleTarget = Math.PI/2;
 			}
-			shoot((int) this.x + 8, (int) this.y + 16, angleTarget, new GammaProjectile(), friendly);
+			shoot((int) this.x + (this.width / 4), (int) this.y + (this.height / 2), angleTarget, new GammaProjectile(), friendly);
 			fireRate = GammaProjectile.FIRE_RATE;
 		}
 	}

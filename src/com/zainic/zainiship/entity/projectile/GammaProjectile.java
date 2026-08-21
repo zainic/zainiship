@@ -13,7 +13,10 @@ public class GammaProjectile extends Projectile{
 		speed = 2;
 		damage = 10;
 		
+		this.name = "GammaProjectile";
 		sprite = Sprite.gamma_projectile;
+		this.width = sprite.getWidth();
+		this.height = sprite.getHeight();
 		this.hitboxAnchorX = 3;
 		this.hitboxAnchorY = 3;
 		this.hitboxSizeX = 10;

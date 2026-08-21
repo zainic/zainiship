@@ -20,9 +20,9 @@ public class Main extends Canvas implements Runnable{
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static int width = 600;
+	private static int width = 1280;
 	private static int height = width / 16 * 9;
-	private static int scale = 2;
+	private static int scale = 1;
 	private static String title = "Zainiship";
 	
 	private Thread thread;
@@ -51,7 +51,7 @@ public class Main extends Canvas implements Runnable{
 		level = Level.level1;
 		level.init(screen);
 		key = new Keyboard();
-		player = new Player((width >> 1) - 16, (height >> 1) - 16, key);
+		player = new Player((width >> 1), (height >> 1), key);
 		player.init(level, screen);
 		level.addAlliesMob(player);
 		
@@ -157,8 +157,9 @@ public class Main extends Canvas implements Runnable{
 		g.drawString("Enemies Mob : " + level.getEnemiesMob().size(), 10, 120);
 		g.drawString("Allies Projectile : " + level.getAlliesProjectiles().size(), 10, 135);
 		g.drawString("Enemies Projectile : " + level.getEnemiesProjectiles().size(), 10, 150);
-		g.drawString("Health : " + player.getHealth(), 10, 165);
-		g.drawString("Pause : " + pause, 10, 180);
+		g.drawString("Effects : " + level.getEffects().size(), 10, 165);
+		g.drawString("Health : " + player.getHealth(), 10, 180);
+		g.drawString("Pause : " + pause, 10, 195);
 		g.dispose(); //remove the graphics after not used
 		bs.show(); //show the buffer that being calculated
 	}

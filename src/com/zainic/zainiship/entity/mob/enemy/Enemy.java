@@ -2,6 +2,7 @@ package com.zainic.zainiship.entity.mob.enemy;
 
 import com.zainic.zainiship.entity.mob.Mob;
 import com.zainic.zainiship.graphics.Sprite;
+import com.zainic.zainiship.graphics.effect.ExplosionEffect;
 
 public abstract class Enemy extends Mob{
 	
@@ -28,7 +29,7 @@ public abstract class Enemy extends Mob{
 		this.x = x + mobSpeed*xa;
 		this.y = y + mobSpeed*ya;
 	}
-	
+
 	public void update() {
 		
 	}
@@ -46,6 +47,7 @@ public abstract class Enemy extends Mob{
 	}
 	
 	public void destroy() {
-		
+		level.addEffect(new ExplosionEffect(this.x + this.width / 2, this.y + this.height / 2));
+		remove();
 	}
 }

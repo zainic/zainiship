@@ -8,6 +8,7 @@ import com.zainic.zainiship.entity.Entity;
 import com.zainic.zainiship.entity.mob.Mob;
 import com.zainic.zainiship.entity.projectile.Projectile;
 import com.zainic.zainiship.graphics.Screen;
+import com.zainic.zainiship.graphics.effect.Effect;
 
 
 public class Level {
@@ -23,6 +24,7 @@ public class Level {
 	private List<Mob> enemiesMob = new ArrayList<Mob>();
 	private List<Projectile> alliesProjectiles = new ArrayList<Projectile>();
 	private List<Projectile> enemiesProjectiles = new ArrayList<Projectile>();
+	private List<Effect> effects = new ArrayList<Effect>();
 	
 	public static Level level1 = new Level1("/levels/level1/background.png");
 	
@@ -84,6 +86,10 @@ public class Level {
 	public List<Projectile> getEnemiesProjectiles() {
 		return enemiesProjectiles;
 	}
+
+	public List<Effect> getEffects() {
+		return effects;
+	}
 	
 	public void update() {
 		for (int i = 0; i < alliesEntities.size(); i++) {
@@ -91,6 +97,9 @@ public class Level {
 		}
 		for (int i = 0; i < enemiesEntities.size(); i++) {
 			enemiesEntities.get(i).update();
+		}
+		for (int i = 0; i < effects.size(); i++) {
+			effects.get(i).update();
 		}
 		addTimeEvent();
 		this.time++;
@@ -100,14 +109,15 @@ public class Level {
 	public void render(int xScroll, int yScroll, Screen screen) {
 		//screen.setOffset(xScroll, yScroll);
 		screen.renderBackground(xScroll, yScroll, this);
-		
 		for (int i = alliesEntities.size() - 1; i >= 0 ; i--) {
 			alliesEntities.get(i).render(screen);
 		}
 		for (int i = enemiesEntities.size() - 1; i >= 0 ; i--) {
 			enemiesEntities.get(i).render(screen);
 		}
-		
+		for (int i = effects.size() - 1; i >= 0 ; i--) {
+			effects.get(i).render(screen);
+		}
 	}
 	
 	private void clear() {
@@ -134,6 +144,10 @@ public class Level {
 		for (int i = 0; i < getEnemiesProjectiles().size(); i++) {
 			Projectile p = getEnemiesProjectiles().get(i);
 			if (p.isRemoved()) getEnemiesProjectiles().remove(i);
+		}
+		for (int i = 0; i < getEffects().size(); i++) {
+			Effect e = getEffects().get(i);
+			if (e.isRemoved()) getEffects().remove(i);
 		}
 	}
 	
@@ -169,6 +183,11 @@ public class Level {
 		p.init(this, screen);
 		enemiesEntities.add(p);
 		enemiesProjectiles.add(p);
+	}
+
+	public void addEffect(Effect e) {
+		e.init(this, screen);
+		effects.add(e);
 	}
 	
 	public void addTimeEvent() {
