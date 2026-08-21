@@ -1,5 +1,6 @@
 package com.zainic.zainiship.entity.mob.enemy;
 
+import com.zainic.zainiship.audio.Audio;
 import com.zainic.zainiship.entity.mob.Mob;
 import com.zainic.zainiship.graphics.Sprite;
 import com.zainic.zainiship.graphics.effect.ExplosionEffect;
@@ -48,6 +49,7 @@ public abstract class Enemy extends Mob{
 	
 	public void destroy() {
 		level.addEffect(new ExplosionEffect(this.x + this.width / 2, this.y + this.height / 2));
+		if (Audio.ENEMY_EXPLOSION != null) Audio.ENEMY_EXPLOSION.play();
 		remove();
 	}
 }

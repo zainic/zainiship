@@ -15,6 +15,7 @@ import com.zainic.zainiship.input.Mouse;
 import com.zainic.zainiship.entity.mob.Player;
 import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.level.Level;
+import com.zainic.zainiship.audio.Audio;
 
 public class Main extends Canvas implements Runnable{
 	
@@ -59,6 +60,12 @@ public class Main extends Canvas implements Runnable{
 		this.addKeyListener(key);
 		this.addMouseListener(mouse);
 		this.addMouseMotionListener(mouse);
+
+		// Initialize audio (loads SFX and music). Expects files under res/sounds/
+		Audio.init();
+		if (Audio.MUSIC_GAME != null) {
+			Audio.MUSIC_GAME.playLoop();
+		}
 	}
 	
 	public synchronized void start() {
@@ -74,6 +81,8 @@ public class Main extends Canvas implements Runnable{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		// stop background music when game stops
+		if (Audio.MUSIC_GAME != null) Audio.MUSIC_GAME.stop();
 	}
 	
 	@Override

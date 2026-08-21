@@ -6,6 +6,7 @@ import com.zainic.zainiship.entity.projectile.BulletProjectile;
 import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.input.Keyboard;
 import com.zainic.zainiship.input.Mouse;
+import com.zainic.zainiship.audio.Audio;
 
 public class Player extends Mob{
 	
@@ -66,6 +67,8 @@ public class Player extends Mob{
 	private void updateShooting() {
 		if ((input.space || Mouse.getB() == Mouse.LMB) && fireRate <= 0) {
 			shoot((int) x + (this.width / 4), (int) y, -Math.PI/2, new BulletProjectile(), friendly);
+			// play shooting sound (loaded in Audio.init())
+			if (Audio.SHOOT != null) Audio.SHOOT.play();
 			fireRate = BulletProjectile.FIRE_RATE;
 		}
 	}
@@ -76,6 +79,7 @@ public class Player extends Mob{
 	
 	public void destroy() {
 		level.addEffect(new ExplosionEffect(this.x + this.width / 2, this.y + this.height / 2));
+		if (Audio.EXPLOSION != null) Audio.EXPLOSION.play();
 		remove();
 	}
 	

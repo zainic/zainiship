@@ -1,5 +1,6 @@
 package com.zainic.zainiship.entity.mob.enemy;
 
+import com.zainic.zainiship.audio.Audio;
 import com.zainic.zainiship.entity.projectile.GammaProjectile;
 import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.graphics.Sprite;
@@ -51,6 +52,7 @@ public class Enemy3 extends Enemy{
 				angleTarget = Math.PI/2;
 			}
 			shoot((int) this.x + (this.width / 4), (int) this.y + (this.height / 2), angleTarget, new GammaProjectile(), friendly);
+			if (Audio.SHOOT != null) Audio.SHOOT.play();
 			fireRate = GammaProjectile.FIRE_RATE;
 		}
 	}
