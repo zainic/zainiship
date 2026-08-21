@@ -42,7 +42,7 @@ public class Enemy2 extends Enemy{
 	private void updateShooting() {
 		if (fireRate <= 0) {
 			shoot((int) this.x + (this.width / 4), (int) this.y + (this.height / 2), Math.PI/2, new BetaProjectile(), friendly);
-			if (Audio.SHOOT != null) Audio.SHOOT.play();
+			if (Audio.ENEMY_SHOOT != null) Audio.ENEMY_SHOOT.play();
 			fireRate = BetaProjectile.FIRE_RATE;
 		}
 	}

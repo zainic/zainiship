@@ -52,7 +52,7 @@ public class Enemy3 extends Enemy{
 				angleTarget = Math.PI/2;
 			}
 			shoot((int) this.x + (this.width / 4), (int) this.y + (this.height / 2), angleTarget, new GammaProjectile(), friendly);
-			if (Audio.SHOOT != null) Audio.SHOOT.play();
+			if (Audio.ENEMY_SHOOT != null) Audio.ENEMY_SHOOT.play();
 			fireRate = GammaProjectile.FIRE_RATE;
 		}
 	}

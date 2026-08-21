@@ -33,6 +33,7 @@ public class Sprite {
 	public static Sprite alpha_projectile = new Sprite(16, 1, 0, SpriteSheet.projectilesheet);
 	public static Sprite beta_projectile = new Sprite(16, 1, 1, SpriteSheet.projectilesheet);
 	public static Sprite gamma_projectile = new Sprite(16, 1, 2, SpriteSheet.projectilesheet);
+	public static Sprite delta_projectile = new Sprite(16, 1, 3, SpriteSheet.projectilesheet);
 	
 	//Effect Sprites
 	public static Sprite default_explosion_effect = new Sprite(48, SpriteEffect.defaultEnemyExplosion);
