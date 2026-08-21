@@ -1,5 +1,6 @@
 package com.zainic.zainiship.entity.mob.enemy;
 
+import com.zainic.zainiship.audio.Audio;
 import com.zainic.zainiship.entity.projectile.AlphaProjectile;
 import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.graphics.Sprite;
@@ -42,6 +43,7 @@ public class Enemy1 extends Enemy{
 	private void updateShooting() {
 		if (fireRate <= 0) {
 			shoot((int) this.x + (this.width / 4), (int) this.y + (this.height / 2), Math.PI/2, new AlphaProjectile(), friendly);
+			if (Audio.SHOOT != null) Audio.SHOOT.play();
 			fireRate = AlphaProjectile.FIRE_RATE;
 		}
 	}
