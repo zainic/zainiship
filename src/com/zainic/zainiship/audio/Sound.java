@@ -27,12 +27,14 @@ public class Sound {
 
     private AudioInputStream getAudioInputStream(String path) throws IOException, UnsupportedAudioFileException {
         // Try file system first
-        try {
-            File f = new File(path);
-            if (f.exists()) {
-                return AudioSystem.getAudioInputStream(f);
+        for (File file : new File[] {new File(path), new File("..", path)}) {
+            try {
+                if (file.isFile()) {
+                    return AudioSystem.getAudioInputStream(file);
+                }
+            } catch (UnsupportedAudioFileException | IOException ignored) {
             }
-        } catch (Exception ignored) {}
+        }
 
         // Try classpath resource
         InputStream is = Sound.class.getClassLoader().getResourceAsStream(path);
