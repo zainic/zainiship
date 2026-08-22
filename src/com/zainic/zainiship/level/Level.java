@@ -101,6 +101,14 @@ public class Level {
 		for (int i = 0; i < effects.size(); i++) {
 			effects.get(i).update();
 		}
+		for (int i = 0; i < alliesMob.size(); i++) {
+			alliesMob.get(i).checkHit();
+			alliesMob.get(i).checkHealth();
+		}
+		for (int i = 0; i < enemiesMob.size(); i++) {
+			enemiesMob.get(i).checkHit();
+			enemiesMob.get(i).checkHealth();
+		}
 		addTimeEvent();
 		this.time++;
 		clear();

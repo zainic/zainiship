@@ -50,8 +50,6 @@ public class Enemy4 extends Enemy{
 		}
 		if (path == 0) move(Path.pathFourX(t, angleTarget), Path.pathFourY(t, angleTarget));
 		t += mobSpeed;
-		checkHit();
-		checkHealth();
 		if (isOutsideScreen() && t > 200) remove();
 		updateShooting();
 	}

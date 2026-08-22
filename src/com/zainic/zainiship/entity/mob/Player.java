@@ -57,8 +57,6 @@ public class Player extends Mob{
 //			}
 		}
 		
-		checkHit();
-		checkHealth();
 		updateShooting();
 
 	}

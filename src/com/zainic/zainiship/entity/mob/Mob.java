@@ -87,59 +87,21 @@ public abstract class Mob extends Entity{
 	}
 	
 	public boolean getHitStatusBy(Entity e, boolean allies) {
-		boolean hitX, hitY;
-		if (friendly ^ allies) {
-//			Set<Integer> itsX = new HashSet<Integer>();
-//			Set<Integer> itsY = new HashSet<Integer>();
-//			Set<Integer> thatsX = new HashSet<Integer>();
-//			Set<Integer> thatsY = new HashSet<Integer>();
-//			itsX.addAll(IntStream.rangeClosed((int) x + hitboxAnchorX, (int) x + hitboxAnchorX + hitboxSizeX).boxed().collect(Collectors.toList()));
-//			itsY.addAll(IntStream.rangeClosed((int) y + hitboxAnchorY, (int) y + hitboxAnchorY + hitboxSizeY).boxed().collect(Collectors.toList()));
-//			thatsX.addAll(IntStream.rangeClosed((int) e.getX() + e.getHitboxAnchorX(), (int) e.getX() + e.getHitboxAnchorX() + e.getHitboxSizeX()).boxed().collect(Collectors.toList()));
-//			thatsY.addAll(IntStream.rangeClosed((int) e.getY() + e.getHitboxAnchorY(), (int) e.getY() + e.getHitboxAnchorY() + e.getHitboxSizeY()).boxed().collect(Collectors.toList()));
-//			Set<Integer> xIntersection = new HashSet<Integer>(itsX);
-//			Set<Integer> yIntersection = new HashSet<Integer>(itsY);
-//			xIntersection.retainAll(thatsX);
-//			yIntersection.retainAll(thatsY);
-//			hitX = !xIntersection.isEmpty();
-//			hitY = !yIntersection.isEmpty();
-			if (x < e.getX()){
-				if (x + hitboxAnchorX + hitboxSizeX - e.getX() - e.getHitboxAnchorX() > 0) {
-					hitX = true;
-				}
-				else {
-					hitX = false;
-				}
-			}
-			else {
-				if (e.getX() + e.getHitboxAnchorX() + e.getHitboxSizeX() - x - hitboxAnchorX > 0) {
-					hitX = true;
-				}
-				else {
-					hitX = false;
-				}
-			}
-			if (y < e.getY()){
-				if (y + hitboxAnchorY + hitboxSizeY - e.getY() - e.getHitboxAnchorY() > 0) {
-					hitY = true;
-				}
-				else {
-					hitY = false;
-				}
-			}
-			else {
-				if (e.getY() + e.getHitboxAnchorY() + e.getHitboxSizeY() - y - hitboxAnchorY > 0) {
-					hitY = true;
-				}
-				else {
-					hitY = false;
-				}
-			}
-			return hitX && hitY;
-		}
-		else {
+		if (!(friendly ^ allies)) {
 			return false;
 		}
+
+		double thisLeft = x + hitboxAnchorX;
+		double thisTop = y + hitboxAnchorY;
+		double thisRight = thisLeft + hitboxSizeX;
+		double thisBottom = thisTop + hitboxSizeY;
+		double otherLeft = e.getX() + e.getHitboxAnchorX();
+		double otherTop = e.getY() + e.getHitboxAnchorY();
+		double otherRight = otherLeft + e.getHitboxSizeX();
+		double otherBottom = otherTop + e.getHitboxSizeY();
+
+		return thisLeft < otherRight && thisRight > otherLeft
+				&& thisTop < otherBottom && thisBottom > otherTop;
 		
 	} 
 	

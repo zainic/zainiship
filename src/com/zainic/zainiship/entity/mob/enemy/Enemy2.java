@@ -17,9 +17,9 @@ public class Enemy2 extends Enemy{
 		this.width = sprite.getWidth();
 		this.height = sprite.getHeight();
 		justMove(-this.width / 2, -this.height / 2);
-		this.hitboxAnchorX = 6;
+		this.hitboxAnchorX = 4;
 		this.hitboxAnchorY = 0;
-		this.hitboxSizeX = 20;
+		this.hitboxSizeX = 24;
 		this.hitboxSizeY = 31;
 		this.path = path;
 		this.mobSpeed = 1.5;
@@ -33,8 +33,6 @@ public class Enemy2 extends Enemy{
 		if (fireRate > 0) fireRate--;
 		if (path == 0) move(Path.pathTwoX(t), Path.pathTwoY(t));
 		t += mobSpeed;
-		checkHit();
-		checkHealth();
 		if (isOutsideScreen() && t > 50) remove();
 		updateShooting();
 	}
