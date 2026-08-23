@@ -4,6 +4,7 @@ import com.zainic.zainiship.audio.Audio;
 import com.zainic.zainiship.entity.projectile.AlphaProjectile;
 import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.graphics.Sprite;
+import com.zainic.zainiship.graphics.effect.EnemyExplosionEffect1;
 import com.zainic.zainiship.path.Path;
 
 public class Enemy1 extends Enemy{
@@ -48,6 +49,12 @@ public class Enemy1 extends Enemy{
 	
 	public void render(Screen screen) {
 		screen.renderEntity((int) this.x, (int) this.y, this);
+	}
+
+	public void destroy() {
+		level.addEffect(new EnemyExplosionEffect1(this.x + this.width / 2, this.y + this.height / 2));
+		if (Audio.ENEMY_EXPLOSION != null) Audio.ENEMY_EXPLOSION.play();
+		remove();
 	}
 
 }

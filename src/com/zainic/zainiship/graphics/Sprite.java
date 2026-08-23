@@ -27,6 +27,42 @@ public class Sprite {
 	public static Sprite enemy_ship_4 = new Sprite(64, 0, 3, SpriteSheet.enemyship);
 	public static Sprite enemy_ship32_4 = new Sprite(32, 0, 3, SpriteSheet.enemyship32);
 	
+	public static Sprite enemy_ship_5 = new Sprite(64, 1, 0, SpriteSheet.enemyship);
+	public static Sprite enemy_ship32_5 = new Sprite(32, 1, 0, SpriteSheet.enemyship32);
+	
+	public static Sprite enemy_ship_6 = new Sprite(64, 1, 1, SpriteSheet.enemyship);
+	public static Sprite enemy_ship32_6 = new Sprite(32, 1, 1, SpriteSheet.enemyship32);
+	
+	public static Sprite enemy_ship_7 = new Sprite(64, 1, 2, SpriteSheet.enemyship);
+	public static Sprite enemy_ship32_7 = new Sprite(32, 1, 2, SpriteSheet.enemyship32);
+
+	public static Sprite enemy_ship_8 = new Sprite(64, 1, 3, SpriteSheet.enemyship);
+	public static Sprite enemy_ship32_8 = new Sprite(32, 1, 3, SpriteSheet.enemyship32);
+
+	public static Sprite enemy_ship_9 = new Sprite(64, 2, 0, SpriteSheet.enemyship);
+	public static Sprite enemy_ship32_9 = new Sprite(32, 2, 0, SpriteSheet.enemyship32);
+	
+	public static Sprite enemy_ship_10 = new Sprite(64, 2, 1, SpriteSheet.enemyship);
+	public static Sprite enemy_ship32_10 = new Sprite(32, 2, 1, SpriteSheet.enemyship32);
+	
+	public static Sprite enemy_ship_11 = new Sprite(64, 2, 2, SpriteSheet.enemyship);
+	public static Sprite enemy_ship32_11 = new Sprite(32, 2, 2, SpriteSheet.enemyship32);
+
+	public static Sprite enemy_ship_12 = new Sprite(64, 2, 3, SpriteSheet.enemyship);
+	public static Sprite enemy_ship32_12 = new Sprite(32, 2, 3, SpriteSheet.enemyship32);
+
+	public static Sprite enemy_ship_13 = new Sprite(64, 3, 0, SpriteSheet.enemyship);
+	public static Sprite enemy_ship32_13 = new Sprite(32, 3, 0, SpriteSheet.enemyship32);
+	
+	public static Sprite enemy_ship_14 = new Sprite(64, 3, 1, SpriteSheet.enemyship);
+	public static Sprite enemy_ship32_14 = new Sprite(32, 3, 1, SpriteSheet.enemyship32);
+	
+	public static Sprite enemy_ship_15 = new Sprite(64, 3, 2, SpriteSheet.enemyship);
+	public static Sprite enemy_ship32_15 = new Sprite(32, 3, 2, SpriteSheet.enemyship32);
+
+	public static Sprite enemy_ship_16 = new Sprite(64, 3, 3, SpriteSheet.enemyship);
+	public static Sprite enemy_ship32_16 = new Sprite(32, 3, 3, SpriteSheet.enemyship32);
+
 	//Projectile Sprites
 	public static Sprite bullet_projectile = new Sprite(16, 0, 0, SpriteSheet.projectilesheet);
 	
@@ -34,7 +70,27 @@ public class Sprite {
 	public static Sprite beta_projectile = new Sprite(16, 1, 1, SpriteSheet.projectilesheet);
 	public static Sprite gamma_projectile = new Sprite(16, 1, 2, SpriteSheet.projectilesheet);
 	public static Sprite delta_projectile = new Sprite(16, 1, 3, SpriteSheet.projectilesheet);
-	
+	public static Sprite epsilon_projectile = new Sprite(16, 2, 0, SpriteSheet.projectilesheet);
+	public static Sprite zeta_projectile = new Sprite(16, 2, 1, SpriteSheet.projectilesheet);
+	public static Sprite eta_projectile = new Sprite(16, 2, 2, SpriteSheet.projectilesheet);
+	public static Sprite theta_projectile = new Sprite(16, 2, 3, SpriteSheet.projectilesheet);
+	public static Sprite iota_projectile = new Sprite(16, 3, 0, SpriteSheet.projectilesheet);
+	public static Sprite kappa_projectile = new Sprite(16, 3, 1, SpriteSheet.projectilesheet);
+	public static Sprite lambda_projectile = new Sprite(16, 3, 2, SpriteSheet.projectilesheet);
+	public static Sprite mu_projectile = new Sprite(16, 3, 3, SpriteSheet.projectilesheet);
+	public static Sprite nu_projectile = new Sprite(16, 4, 0, SpriteSheet.projectilesheet);
+	public static Sprite xi_projectile = new Sprite(16, 4, 1, SpriteSheet.projectilesheet);
+	public static Sprite omicron_projectile = new Sprite(16, 4, 2, SpriteSheet.projectilesheet);
+	public static Sprite pi_projectile = new Sprite(16, 4, 3, SpriteSheet.projectilesheet);
+	public static Sprite rho_projectile = new Sprite(16, 5, 0, SpriteSheet.projectilesheet);
+	public static Sprite sigma_projectile = new Sprite(16, 5, 1, SpriteSheet.projectilesheet);
+	public static Sprite tau_projectile = new Sprite(16, 5, 2, SpriteSheet.projectilesheet);
+	public static Sprite upsilon_projectile = new Sprite(16, 5, 3, SpriteSheet.projectilesheet);
+	public static Sprite phi_projectile = new Sprite(16, 6, 0, SpriteSheet.projectilesheet);
+	public static Sprite chi_projectile = new Sprite(16, 6, 1, SpriteSheet.projectilesheet);
+	public static Sprite psi_projectile = new Sprite(16, 6, 2, SpriteSheet.projectilesheet);
+	public static Sprite omega_projectile = new Sprite(16, 6, 3, SpriteSheet.projectilesheet); 
+
 	//Effect Sprites
 	public static Sprite default_explosion_effect = new Sprite(48, SpriteEffect.defaultEnemyExplosion);
 

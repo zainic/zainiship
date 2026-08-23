@@ -1,7 +1,7 @@
 package com.zainic.zainiship.entity.mob;
 
 import com.zainic.zainiship.graphics.Sprite;
-import com.zainic.zainiship.graphics.effect.ExplosionEffect;
+import com.zainic.zainiship.graphics.effect.PlayerExplosionEffect;
 import com.zainic.zainiship.entity.projectile.BulletProjectile;
 import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.input.Keyboard;
@@ -76,7 +76,7 @@ public class Player extends Mob{
 	}
 	
 	public void destroy() {
-		level.addEffect(new ExplosionEffect(this.x + this.width / 2, this.y + this.height / 2));
+		level.addEffect(new PlayerExplosionEffect(this.x + this.width / 2, this.y + this.height / 2));
 		if (Audio.PLAYER_EXPLOSION != null) Audio.PLAYER_EXPLOSION.play();
 		remove();
 	}

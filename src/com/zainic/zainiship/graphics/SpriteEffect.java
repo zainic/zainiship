@@ -12,11 +12,11 @@ public class SpriteEffect {
 	public int[] pixels;
     public int totalFrames;
 	
-	public static SpriteEffect playerExplosion = new SpriteEffect("/spritesheets/effect/enemyexplosion.png", 48);
-	public static SpriteEffect defaultEnemyExplosion = new SpriteEffect("/spritesheets/effect/enemy2explosion.png", 48);
-	public static SpriteEffect enemyExplosion1 = new SpriteEffect("/spritesheets/effect/enemyexplosion.png", 48);
-    public static SpriteEffect enemyExplosion2 = new SpriteEffect("/spritesheets/effect/enemyexplosion.png", 48);
-    public static SpriteEffect enemyExplosion3 = new SpriteEffect("/spritesheets/effect/enemyexplosion.png", 48);
+	public static SpriteEffect playerExplosion = new SpriteEffect("/spritesheets/effect/playerexplosion.png", 48);
+	public static SpriteEffect defaultEnemyExplosion = new SpriteEffect("/spritesheets/effect/explosive.png", 48);
+	public static SpriteEffect enemyExplosion1 = new SpriteEffect("/spritesheets/effect/enemyexplosion1.png", 48);
+    public static SpriteEffect enemyExplosion2 = new SpriteEffect("/spritesheets/effect/enemyexplosion2.png", 48);
+    public static SpriteEffect enemyExplosion3 = new SpriteEffect("/spritesheets/effect/enemyexplosion3.png", 48);
 
 	public SpriteEffect(String path, int size) {
 		this.path = path;
