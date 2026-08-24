@@ -4,18 +4,18 @@ import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.graphics.Sprite;
 import com.zainic.zainiship.graphics.SpriteEffect;
 
-public class ExplosionEffect extends Effect {
+public class DefaultEnemyExplosionEffect extends Effect {
     
-    public ExplosionEffect(double x, double y) {
+    public DefaultEnemyExplosionEffect(double x, double y) {
         super(x, y);
-        this.name = "ExplosionEffect";
+        this.name = "DefaultEnemyExplosionEffect";
 		this.sprite = new Sprite(48, SpriteEffect.defaultEnemyExplosion);
 		this.width = sprite.getWidth();
 		this.height = sprite.getHeight();
         justMove(-this.width / 2, -this.height / 2);
 
         this.time = 0;
-        this.life = 100;
+        this.life = 60;
         this.totalStates = sprite.getTotalStates();
     }
 

@@ -6,6 +6,7 @@ public class Audio {
     public static Sound PLAYER_EXPLOSION;
     public static Sound ENEMY_EXPLOSION;
     public static MusicPlayer MUSIC_GAME;
+    public static MusicPlayer MUSIC_MENU;
 
     public static void init() {
         // paths relative to project root or on classpath
@@ -14,9 +15,13 @@ public class Audio {
         ENEMY_SHOOT = new Sound("res/sounds/enemy_shoot.wav");
         ENEMY_EXPLOSION = new Sound("res/sounds/enemy_explode.wav");
         MUSIC_GAME = new MusicPlayer("res/sounds/play_music.wav");
+		MUSIC_MENU = new MusicPlayer("res/sounds/menu_music.wav");
         if (MUSIC_GAME != null) {
             MUSIC_GAME.setVolume(1.0f);
         }
+		if (MUSIC_MENU != null) {
+			MUSIC_MENU.setVolume(1.0f);
+		}
         if (PLAYER_SHOOT != null) {
             PLAYER_SHOOT.setVolume(-5.0f);
         }

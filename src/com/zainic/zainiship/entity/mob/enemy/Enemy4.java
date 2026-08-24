@@ -23,7 +23,7 @@ public class Enemy4 extends Enemy{
 		this.hitboxSizeX = 28;
 		this.hitboxSizeY = 30;
 		this.path = path;
-		this.mobSpeed = 5;
+		this.mobSpeed = 6;
 		this.mobDamage = 20;
 		this.health = 80;
 		this.armor = 0.0;
@@ -34,7 +34,7 @@ public class Enemy4 extends Enemy{
 		if (fireRate > 0) fireRate--;
 		double angleTarget;
 		if (level.getAlliesMob().size() > 0) {
-			if (t <= 350) {
+			if (t <= 400) {
 				double xTarget = (level.getAlliesMob().get(level.getAlliesMob().size() - 1).getX() - (this.width / 2)) - (this.x - (this.width / 2));
 				double yTarget = (level.getAlliesMob().get(level.getAlliesMob().size() - 1).getY() - (this.height / 2)) - (this.y - (this.height / 2));
 				angleTarget = Math.atan2(yTarget, xTarget);
@@ -50,8 +50,6 @@ public class Enemy4 extends Enemy{
 		}
 		if (path == 0) move(Path.pathFourX(t, angleTarget), Path.pathFourY(t, angleTarget));
 		t += mobSpeed;
-		checkHit();
-		checkHealth();
 		if (isOutsideScreen() && t > 200) remove();
 		updateShooting();
 	}

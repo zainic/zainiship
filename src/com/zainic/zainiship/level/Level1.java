@@ -75,17 +75,14 @@ public class Level1 extends Level {
 						case 0:
 							rand2 = (int) (Math.random() * 7) + 1;
 							addEnemiesMob(new Enemy4(screen.getWidth() * rand2/8, -32, 0));
-							System.out.println("Enemy4 added at time: " + this.time + " with rand1: " + rand1 + " and rand2: " + rand2);
 							break;
 						case 1:
 							rand2 = (int) (Math.random() * 4) + 1;
 							addEnemiesMob(new Enemy4(-32, screen.getHeight() * rand2/5, 0));
-							System.out.println("Enemy4 added at time: " + this.time + " with rand1: " + rand1 + " and rand2: " + rand2);
 							break;
 						case 2:
 							rand2 = (int) (Math.random() * 4) + 1;
 							addEnemiesMob(new Enemy4(screen.getWidth() + 32, screen.getHeight() * rand2/5,0));
-							System.out.println("Enemy4 added at time: " + this.time + " with rand1: " + rand1 + " and rand2: " + rand2);
 							break;
 						default:
 							break;	

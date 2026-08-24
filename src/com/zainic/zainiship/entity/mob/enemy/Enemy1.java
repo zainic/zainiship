@@ -4,6 +4,7 @@ import com.zainic.zainiship.audio.Audio;
 import com.zainic.zainiship.entity.projectile.AlphaProjectile;
 import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.graphics.Sprite;
+import com.zainic.zainiship.graphics.effect.EnemyExplosionEffect1;
 import com.zainic.zainiship.path.Path;
 
 public class Enemy1 extends Enemy{
@@ -17,10 +18,10 @@ public class Enemy1 extends Enemy{
 		this.width = sprite.getWidth();
 		this.height = sprite.getHeight();
 		justMove(-this.width / 2, -this.height / 2);
-		this.hitboxAnchorX = 4;
-		this.hitboxAnchorY = 0;
-		this.hitboxSizeX = 24;
-		this.hitboxSizeY = 25;
+		this.hitboxAnchorX = 3;
+		this.hitboxAnchorY = 1;
+		this.hitboxSizeX = 28;
+		this.hitboxSizeY = 32;
 		this.path = path;
 		this.mobSpeed = 0.5;
 		this.mobDamage = 20;
@@ -34,8 +35,6 @@ public class Enemy1 extends Enemy{
 		if (path == 0) move(Path.pathOneLeftX(t), Path.pathOneLeftY(t));
 		if (path == 1) move(Path.pathOneRightX(t), Path.pathOneRightY(t));
 		t += mobSpeed;
-		checkHit();
-		checkHealth();
 		if (isOutsideScreen() && t > 50) remove();
 		updateShooting();
 	}
@@ -50,6 +49,12 @@ public class Enemy1 extends Enemy{
 	
 	public void render(Screen screen) {
 		screen.renderEntity((int) this.x, (int) this.y, this);
+	}
+
+	public void destroy() {
+		level.addEffect(new EnemyExplosionEffect1(this.x + this.width / 2, this.y + this.height / 2));
+		if (Audio.ENEMY_EXPLOSION != null) Audio.ENEMY_EXPLOSION.play();
+		remove();
 	}
 
 }
