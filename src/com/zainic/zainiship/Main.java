@@ -16,6 +16,7 @@ import com.zainic.zainiship.entity.mob.Player;
 import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.level.Level;
 import com.zainic.zainiship.audio.Audio;
+import com.zainic.zainiship.ui.MainMenu;
 
 public class Main extends Canvas implements Runnable{
 	
@@ -30,6 +31,8 @@ public class Main extends Canvas implements Runnable{
 	private JFrame frame;
 	private boolean running = false;
 	private boolean pause = false;
+	private boolean inMainMenu = true;
+	private boolean enterWasDown = false;
 	private int pauseDelay = 10;
 	private int frames = 0;
 	private int ticks = 0;
@@ -42,10 +45,12 @@ public class Main extends Canvas implements Runnable{
 	private Keyboard key;
 	private Player player;
 	private double xScroll = 0, yScroll = 0;
+	private MainMenu mainMenu;
 	
 	public Main() {
 		Dimension size = new Dimension(width*scale, height*scale);
 		this.setPreferredSize(size);
+		mainMenu = new MainMenu(width, height);
 		
 		frame = new JFrame();
 		screen = new Screen(width, height);
@@ -63,8 +68,8 @@ public class Main extends Canvas implements Runnable{
 
 		// Initialize audio (loads SFX and music). Expects files under res/sounds/
 		Audio.init();
-		if (Audio.MUSIC_GAME != null) {
-			Audio.MUSIC_GAME.playLoop();
+		if (Audio.MUSIC_MENU != null) {
+			Audio.MUSIC_MENU.playLoop();
 		}
 	}
 	
@@ -83,6 +88,7 @@ public class Main extends Canvas implements Runnable{
 		}
 		// stop background music when game stops
 		if (Audio.MUSIC_GAME != null) Audio.MUSIC_GAME.stop();
+		if (Audio.MUSIC_MENU != null) Audio.MUSIC_MENU.stop();
 	}
 	
 	@Override
@@ -120,6 +126,13 @@ public class Main extends Canvas implements Runnable{
 	
 	public void tick() {
 		key.update();
+		if (inMainMenu) {
+			if ((key.enter && !enterWasDown) || mainMenu.isNewGameClicked(getWidth(), getHeight())) {
+				startGame();
+			}
+			enterWasDown = key.enter;
+			return;
+		}
 		if (key.pause && pauseDelay <= 0) {
 			pause = pause ^ true;
 			pauseDelay = 20;
@@ -129,6 +142,12 @@ public class Main extends Canvas implements Runnable{
 			level.update();
 		}
 	}
+
+	private void startGame() {
+		inMainMenu = false;
+		if (Audio.MUSIC_MENU != null) Audio.MUSIC_MENU.stop();
+		if (Audio.MUSIC_GAME != null) Audio.MUSIC_GAME.playLoop();
+	}
 	
 	public void render() {
 		BufferStrategy bs = this.getBufferStrategy();
@@ -137,6 +156,11 @@ public class Main extends Canvas implements Runnable{
 			return;
 		}
 		
+		if (inMainMenu) {
+			renderMainMenu(bs);
+			return;
+		}
+
 		screen.clear();
 		//int xScroll = player.getX() - (screen.width >> 1) + 32;
 		//int yScroll = player.getY() - (screen.height >> 1) + 32;
@@ -171,6 +195,13 @@ public class Main extends Canvas implements Runnable{
 		g.drawString("Pause : " + pause, 10, 195);
 		g.dispose(); //remove the graphics after not used
 		bs.show(); //show the buffer that being calculated
+	}
+
+	private void renderMainMenu(BufferStrategy bs) {
+		Graphics g = bs.getDrawGraphics();
+		mainMenu.render(g, getWidth(), getHeight());
+		g.dispose();
+		bs.show();
 	}
 	
 	public static void main(String[] args) {
