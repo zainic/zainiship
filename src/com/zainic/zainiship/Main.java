@@ -16,6 +16,7 @@ import com.zainic.zainiship.entity.mob.Player;
 import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.level.Level;
 import com.zainic.zainiship.audio.Audio;
+import com.zainic.zainiship.ui.LoadingMenu;
 import com.zainic.zainiship.ui.MainMenu;
 
 public class Main extends Canvas implements Runnable{
@@ -31,8 +32,8 @@ public class Main extends Canvas implements Runnable{
 	private JFrame frame;
 	private boolean running = false;
 	private boolean pause = false;
-	private boolean inMainMenu = true;
-	private boolean enterWasDown = false;
+	private boolean inMainMenu = false;
+	private boolean inLoading = false;
 	private int pauseDelay = 10;
 	private int frames = 0;
 	private int ticks = 0;
@@ -46,11 +47,16 @@ public class Main extends Canvas implements Runnable{
 	private Player player;
 	private double xScroll = 0, yScroll = 0;
 	private MainMenu mainMenu;
+	private LoadingMenu loadingMenu;
 	
 	public Main() {
 		Dimension size = new Dimension(width*scale, height*scale);
 		this.setPreferredSize(size);
 		mainMenu = new MainMenu(width, height);
+		loadingMenu = new LoadingMenu(width, height);
+
+		// Start in loading menu
+		inLoading = true;
 		
 		frame = new JFrame();
 		screen = new Screen(width, height);
@@ -126,11 +132,19 @@ public class Main extends Canvas implements Runnable{
 	
 	public void tick() {
 		key.update();
+		if (inLoading) {
+			loadingMenu.update();
+			if (loadingMenu.getTime() > 2000) {
+				inLoading = false;
+				inMainMenu = true;
+			}
+			return;
+		}
 		if (inMainMenu) {
-			if ((key.enter && !enterWasDown) || mainMenu.isNewGameClicked(getWidth(), getHeight())) {
+			mainMenu.update();
+			if (mainMenu.isNewGameClicked(getWidth(), getHeight())) {
 				startGame();
 			}
-			enterWasDown = key.enter;
 			return;
 		}
 		if (key.pause && pauseDelay <= 0) {
@@ -153,6 +167,11 @@ public class Main extends Canvas implements Runnable{
 		BufferStrategy bs = this.getBufferStrategy();
 		if (bs == null) {
 			this.createBufferStrategy(3); //triple buffering strategy
+			return;
+		}
+
+		if (inLoading) {
+			renderLoadingMenu(bs);
 			return;
 		}
 		
@@ -200,6 +219,13 @@ public class Main extends Canvas implements Runnable{
 	private void renderMainMenu(BufferStrategy bs) {
 		Graphics g = bs.getDrawGraphics();
 		mainMenu.render(g, getWidth(), getHeight());
+		g.dispose();
+		bs.show();
+	}
+
+	private void renderLoadingMenu(BufferStrategy bs) {
+		Graphics g = bs.getDrawGraphics();
+		loadingMenu.render(g, getWidth(), getHeight());
 		g.dispose();
 		bs.show();
 	}

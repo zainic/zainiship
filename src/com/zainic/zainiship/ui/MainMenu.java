@@ -9,7 +9,6 @@ import javax.imageio.ImageIO;
 
 import com.zainic.zainiship.input.Mouse;
 
-/** Renders the main menu and reports its available actions. */
 public class MainMenu {
 
 	private int designWidth;
@@ -35,8 +34,8 @@ public class MainMenu {
 		}
 	}
 
-	private final BufferedImage background = loadImage("/menu/mainmenu_background.jpg");
-	private final BufferedImage title = loadImage("/menu/title.png");
+	private final BufferedImage background = loadImage("/menu/mainmenu/mainmenu_background.png");
+	private final BufferedImage title = loadImage("/menu/mainmenu/title.png");
 	private final BufferedImage[] initialButtons = new BufferedImage[MenuButton.values().length];
 	private final BufferedImage[] hoveredButtons = new BufferedImage[MenuButton.values().length];
 	private final BufferedImage[] clickedButtons = new BufferedImage[MenuButton.values().length];
@@ -60,6 +59,10 @@ public class MainMenu {
 	public boolean isNewGameClicked(int displayWidth, int displayHeight) {
 		if (Mouse.getB() != Mouse.LMB) return false;
 		return isInsideButton(MenuButton.NEW_GAME.ordinal(), toDesignX(Mouse.getX(), displayWidth), toDesignY(Mouse.getY(), displayHeight));
+	}
+
+	public void update() {
+		// No dynamic elements to update in the main menu for now
 	}
 
 	public void render(Graphics g, int displayWidth, int displayHeight) {
