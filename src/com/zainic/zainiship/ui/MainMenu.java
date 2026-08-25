@@ -3,16 +3,11 @@ package com.zainic.zainiship.ui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import com.zainic.zainiship.input.Mouse;
 
-public class MainMenu {
+public class MainMenu extends Menu {
 
-	private int designWidth;
-	private int designHeight;
 	private int buttonWidth;
 	private int buttonHeight;
 	private int buttonGap;
@@ -41,8 +36,7 @@ public class MainMenu {
 	private final BufferedImage[] clickedButtons = new BufferedImage[MenuButton.values().length];
 
 	public MainMenu(int width, int height) {
-		this.designWidth = width;
-		this.designHeight = height;
+		super(width, height);
 		this.buttonWidth = width * 1 / 4;
 		this.buttonHeight = height * 1 / 8;
 		this.buttonGap = height * 1 / 360;
@@ -62,7 +56,7 @@ public class MainMenu {
 	}
 
 	public void update() {
-		// No dynamic elements to update in the main menu for now
+		this.time++;
 	}
 
 	public void render(Graphics g, int displayWidth, int displayHeight) {
@@ -98,33 +92,5 @@ public class MainMenu {
 
 	private int getButtonY(int buttonIndex) {
 		return firstButtonY + buttonIndex * (buttonHeight + buttonGap);
-	}
-
-	private void drawScaled(Graphics g, BufferedImage image, int x, int y, int width, int height, int displayWidth, int displayHeight) {
-		g.drawImage(image, scaleX(x, displayWidth), scaleY(y, displayHeight), scaleX(width, displayWidth), scaleY(height, displayHeight), null);
-	}
-
-	private int toDesignX(int value, int displayWidth) {
-		return value * designWidth / displayWidth;
-	}
-
-	private int toDesignY(int value, int displayHeight) {
-		return value * designHeight / displayHeight;
-	}
-
-	private int scaleX(int value, int displayWidth) {
-		return value * displayWidth / designWidth;
-	}
-
-	private int scaleY(int value, int displayHeight) {
-		return value * displayHeight / designHeight;
-	}
-
-	private BufferedImage loadImage(String path) {
-		try {
-			return ImageIO.read(MainMenu.class.getResource(path));
-		} catch (IOException | IllegalArgumentException e) {
-			throw new IllegalStateException("Could not load menu asset: " + path, e);
-		}
 	}
 }

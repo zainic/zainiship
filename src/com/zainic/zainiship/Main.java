@@ -134,7 +134,7 @@ public class Main extends Canvas implements Runnable{
 		key.update();
 		if (inLoading) {
 			loadingMenu.update();
-			if (loadingMenu.getTime() > 2000) {
+			if (loadingMenu.getProgressBar() >= 100) {
 				inLoading = false;
 				inMainMenu = true;
 			}
