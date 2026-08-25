@@ -16,13 +16,16 @@ import com.zainic.zainiship.entity.mob.Player;
 import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.level.Level;
 import com.zainic.zainiship.audio.Audio;
-import com.zainic.zainiship.ui.CreateNewGameMenu;
-import com.zainic.zainiship.ui.LoadingMenu;
-import com.zainic.zainiship.ui.MainMenu;
+import com.zainic.zainiship.ui.MenuManager;
 
 public class Main extends Canvas implements Runnable{
 	
 	private static final long serialVersionUID = 1L;
+
+	private enum GameState {
+		MENU,
+		PLAYING
+	}
 	
 	private static int width = 1280;
 	private static int height = width / 16 * 9;
@@ -33,10 +36,7 @@ public class Main extends Canvas implements Runnable{
 	private JFrame frame;
 	private boolean running = false;
 	private boolean pause = false;
-	private boolean inMainMenu = false;
-	private boolean inLoading = false;
-	private boolean inCreateNewGame = false;
-	private boolean inGame = false;
+	private GameState gameState;
 	private int pauseDelay = 10;
 	private int frames = 0;
 	private int ticks = 0;
@@ -49,19 +49,15 @@ public class Main extends Canvas implements Runnable{
 	private Keyboard key;
 	private Player player;
 	private double xScroll = 0, yScroll = 0;
-	private MainMenu mainMenu;
-	private LoadingMenu loadingMenu;
-	private CreateNewGameMenu createNewGameMenu;
+	private MenuManager menuManager;
 	
 	public Main() {
 		Dimension size = new Dimension(width*scale, height*scale);
 		this.setPreferredSize(size);
-		mainMenu = new MainMenu(width, height);
-		loadingMenu = new LoadingMenu(width, height);
-		createNewGameMenu = new CreateNewGameMenu(width, height);
+		menuManager = new MenuManager(width, height);
 
-		// Start in loading menu
-		inLoading = true;
+		// Start in the loading screen.
+		gameState = GameState.MENU;
 		
 		frame = new JFrame();
 		screen = new Screen(width, height);
@@ -137,39 +133,9 @@ public class Main extends Canvas implements Runnable{
 	
 	public void tick() {
 		key.update();
-		if (inLoading) {
-			loadingMenu.update();
-			if (loadingMenu.getProgressBar() >= 100 && loadingMenu.getAlphaFade() >= 1.0f ) {
-				inLoading = false;
-				inMainMenu = true;
-			}
-			return;
-		}
-		if (inMainMenu) {
-			mainMenu.update();
-			boolean clicked = Mouse.consumeLeftClick();
-			if (clicked && mainMenu.isNewGameClicked(getWidth(), getHeight())) {
-				inMainMenu = false;
-				inCreateNewGame = true;
-			}
-			return;
-		}
-		if (inCreateNewGame) {
-			createNewGameMenu.update();
-			boolean clicked = Mouse.consumeLeftClick();
-			String[] buttons = createNewGameMenu.getButtons();
-			for (int i = 0; i < buttons.length; i++){
-				if (buttons[i].equals("BACK")) {
-					if (clicked && createNewGameMenu.isBackClicked(getWidth(), getHeight())) {
-						inMainMenu = true;
-						inCreateNewGame = false;
-					}
-				}
-				else {
-					if (clicked && createNewGameMenu.isSlotGameClicked(i - 1, getWidth(), getHeight())) {
-						startGame();
-					}
-				}
+		if (gameState == GameState.MENU) {
+			if (menuManager.update(getWidth(), getHeight()) == MenuManager.MenuResult.START_GAME) {
+				startGame();
 			}
 			return;
 		}
@@ -184,9 +150,7 @@ public class Main extends Canvas implements Runnable{
 	}
 
 	private void startGame() {
-		inMainMenu = false;
-		inCreateNewGame = false;
-		inGame = true;
+		gameState = GameState.PLAYING;
 		if (Audio.MUSIC_MENU != null) Audio.MUSIC_MENU.stop();
 		if (Audio.MUSIC_GAME != null) Audio.MUSIC_GAME.playLoop();
 	}
@@ -199,22 +163,12 @@ public class Main extends Canvas implements Runnable{
 			return;
 		}
 
-		if (inLoading) {
-			renderLoadingMenu(bs);
-			return;
-		}
-		
-		if (inMainMenu) {
-			renderMainMenu(bs);
+		if (gameState == GameState.MENU) {
+			renderMenu(bs);
 			return;
 		}
 
-		if (inCreateNewGame) {
-			renderCreateNewGameMenu(bs);
-			return;
-		}
-
-		if (inGame) {
+		if (gameState == GameState.PLAYING) {
 			screen.clear();
 			//int xScroll = player.getX() - (screen.width >> 1) + 32;
 			//int yScroll = player.getY() - (screen.height >> 1) + 32;
@@ -252,23 +206,9 @@ public class Main extends Canvas implements Runnable{
 		}
 	}
 
-	private void renderMainMenu(BufferStrategy bs) {
+	private void renderMenu(BufferStrategy bs) {
 		Graphics g = bs.getDrawGraphics();
-		mainMenu.render(g, getWidth(), getHeight());
-		g.dispose();
-		bs.show();
-	}
-
-	private void renderLoadingMenu(BufferStrategy bs) {
-		Graphics g = bs.getDrawGraphics();
-		loadingMenu.render(g, getWidth(), getHeight());
-		g.dispose();
-		bs.show();
-	}
-
-	private void renderCreateNewGameMenu(BufferStrategy bs) {
-		Graphics g = bs.getDrawGraphics();
-		createNewGameMenu.render(g, getWidth(), getHeight());
+		menuManager.render(g, getWidth(), getHeight());
 		g.dispose();
 		bs.show();
 	}
