@@ -16,18 +16,14 @@ import com.zainic.zainiship.entity.mob.Player;
 import com.zainic.zainiship.graphics.Screen;
 import com.zainic.zainiship.level.Level;
 import com.zainic.zainiship.audio.Audio;
-import com.zainic.zainiship.ui.CreateNewGameMenu;
-import com.zainic.zainiship.ui.LoadingMenu;
-import com.zainic.zainiship.ui.MainMenu;
+import com.zainic.zainiship.ui.MenuManager;
 
 public class Main extends Canvas implements Runnable{
 	
 	private static final long serialVersionUID = 1L;
 
 	private enum GameState {
-		LOADING,
-		MAIN_MENU,
-		CREATE_NEW_GAME,
+		MENU,
 		PLAYING
 	}
 	
@@ -53,19 +49,15 @@ public class Main extends Canvas implements Runnable{
 	private Keyboard key;
 	private Player player;
 	private double xScroll = 0, yScroll = 0;
-	private MainMenu mainMenu;
-	private LoadingMenu loadingMenu;
-	private CreateNewGameMenu createNewGameMenu;
+	private MenuManager menuManager;
 	
 	public Main() {
 		Dimension size = new Dimension(width*scale, height*scale);
 		this.setPreferredSize(size);
-		mainMenu = new MainMenu(width, height);
-		loadingMenu = new LoadingMenu(width, height);
-		createNewGameMenu = new CreateNewGameMenu(width, height);
+		menuManager = new MenuManager(width, height);
 
 		// Start in the loading screen.
-		gameState = GameState.LOADING;
+		gameState = GameState.MENU;
 		
 		frame = new JFrame();
 		screen = new Screen(width, height);
@@ -141,31 +133,9 @@ public class Main extends Canvas implements Runnable{
 	
 	public void tick() {
 		key.update();
-		if (gameState == GameState.LOADING) {
-			loadingMenu.update();
-			if (loadingMenu.getProgressBar() >= 100 && loadingMenu.getAlphaFade() >= 1.0f ) {
-				gameState = GameState.MAIN_MENU;
-			}
-			return;
-		}
-		if (gameState == GameState.MAIN_MENU) {
-			mainMenu.update();
-			boolean clicked = Mouse.consumeLeftClick();
-			if (clicked && mainMenu.isNewGameClicked(getWidth(), getHeight())) {
-				gameState = GameState.CREATE_NEW_GAME;
-			}
-			return;
-		}
-		if (gameState == GameState.CREATE_NEW_GAME) {
-			createNewGameMenu.update();
-			boolean clicked = Mouse.consumeLeftClick();
-			if (clicked) {
-				CreateNewGameMenu.Action action = createNewGameMenu.getClickedAction(getWidth(), getHeight());
-				if (action == CreateNewGameMenu.Action.BACK) {
-					gameState = GameState.MAIN_MENU;
-				} else if (action.selectsSaveSlot()) {
-					startGame();
-				}
+		if (gameState == GameState.MENU) {
+			if (menuManager.update(getWidth(), getHeight()) == MenuManager.MenuResult.START_GAME) {
+				startGame();
 			}
 			return;
 		}
@@ -193,18 +163,8 @@ public class Main extends Canvas implements Runnable{
 			return;
 		}
 
-		if (gameState == GameState.LOADING) {
-			renderLoadingMenu(bs);
-			return;
-		}
-		
-		if (gameState == GameState.MAIN_MENU) {
-			renderMainMenu(bs);
-			return;
-		}
-
-		if (gameState == GameState.CREATE_NEW_GAME) {
-			renderCreateNewGameMenu(bs);
+		if (gameState == GameState.MENU) {
+			renderMenu(bs);
 			return;
 		}
 
@@ -246,23 +206,9 @@ public class Main extends Canvas implements Runnable{
 		}
 	}
 
-	private void renderMainMenu(BufferStrategy bs) {
+	private void renderMenu(BufferStrategy bs) {
 		Graphics g = bs.getDrawGraphics();
-		mainMenu.render(g, getWidth(), getHeight());
-		g.dispose();
-		bs.show();
-	}
-
-	private void renderLoadingMenu(BufferStrategy bs) {
-		Graphics g = bs.getDrawGraphics();
-		loadingMenu.render(g, getWidth(), getHeight());
-		g.dispose();
-		bs.show();
-	}
-
-	private void renderCreateNewGameMenu(BufferStrategy bs) {
-		Graphics g = bs.getDrawGraphics();
-		createNewGameMenu.render(g, getWidth(), getHeight());
+		menuManager.render(g, getWidth(), getHeight());
 		g.dispose();
 		bs.show();
 	}
