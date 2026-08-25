@@ -23,6 +23,13 @@ import com.zainic.zainiship.ui.MainMenu;
 public class Main extends Canvas implements Runnable{
 	
 	private static final long serialVersionUID = 1L;
+
+	private enum GameState {
+		LOADING,
+		MAIN_MENU,
+		CREATE_NEW_GAME,
+		PLAYING
+	}
 	
 	private static int width = 1280;
 	private static int height = width / 16 * 9;
@@ -33,10 +40,7 @@ public class Main extends Canvas implements Runnable{
 	private JFrame frame;
 	private boolean running = false;
 	private boolean pause = false;
-	private boolean inMainMenu = false;
-	private boolean inLoading = false;
-	private boolean inCreateNewGame = false;
-	private boolean inGame = false;
+	private GameState gameState;
 	private int pauseDelay = 10;
 	private int frames = 0;
 	private int ticks = 0;
@@ -60,8 +64,8 @@ public class Main extends Canvas implements Runnable{
 		loadingMenu = new LoadingMenu(width, height);
 		createNewGameMenu = new CreateNewGameMenu(width, height);
 
-		// Start in loading menu
-		inLoading = true;
+		// Start in the loading screen.
+		gameState = GameState.LOADING;
 		
 		frame = new JFrame();
 		screen = new Screen(width, height);
@@ -137,38 +141,30 @@ public class Main extends Canvas implements Runnable{
 	
 	public void tick() {
 		key.update();
-		if (inLoading) {
+		if (gameState == GameState.LOADING) {
 			loadingMenu.update();
 			if (loadingMenu.getProgressBar() >= 100 && loadingMenu.getAlphaFade() >= 1.0f ) {
-				inLoading = false;
-				inMainMenu = true;
+				gameState = GameState.MAIN_MENU;
 			}
 			return;
 		}
-		if (inMainMenu) {
+		if (gameState == GameState.MAIN_MENU) {
 			mainMenu.update();
 			boolean clicked = Mouse.consumeLeftClick();
 			if (clicked && mainMenu.isNewGameClicked(getWidth(), getHeight())) {
-				inMainMenu = false;
-				inCreateNewGame = true;
+				gameState = GameState.CREATE_NEW_GAME;
 			}
 			return;
 		}
-		if (inCreateNewGame) {
+		if (gameState == GameState.CREATE_NEW_GAME) {
 			createNewGameMenu.update();
 			boolean clicked = Mouse.consumeLeftClick();
-			String[] buttons = createNewGameMenu.getButtons();
-			for (int i = 0; i < buttons.length; i++){
-				if (buttons[i].equals("BACK")) {
-					if (clicked && createNewGameMenu.isBackClicked(getWidth(), getHeight())) {
-						inMainMenu = true;
-						inCreateNewGame = false;
-					}
-				}
-				else {
-					if (clicked && createNewGameMenu.isSlotGameClicked(i - 1, getWidth(), getHeight())) {
-						startGame();
-					}
+			if (clicked) {
+				CreateNewGameMenu.Action action = createNewGameMenu.getClickedAction(getWidth(), getHeight());
+				if (action == CreateNewGameMenu.Action.BACK) {
+					gameState = GameState.MAIN_MENU;
+				} else if (action.selectsSaveSlot()) {
+					startGame();
 				}
 			}
 			return;
@@ -184,9 +180,7 @@ public class Main extends Canvas implements Runnable{
 	}
 
 	private void startGame() {
-		inMainMenu = false;
-		inCreateNewGame = false;
-		inGame = true;
+		gameState = GameState.PLAYING;
 		if (Audio.MUSIC_MENU != null) Audio.MUSIC_MENU.stop();
 		if (Audio.MUSIC_GAME != null) Audio.MUSIC_GAME.playLoop();
 	}
@@ -199,22 +193,22 @@ public class Main extends Canvas implements Runnable{
 			return;
 		}
 
-		if (inLoading) {
+		if (gameState == GameState.LOADING) {
 			renderLoadingMenu(bs);
 			return;
 		}
 		
-		if (inMainMenu) {
+		if (gameState == GameState.MAIN_MENU) {
 			renderMainMenu(bs);
 			return;
 		}
 
-		if (inCreateNewGame) {
+		if (gameState == GameState.CREATE_NEW_GAME) {
 			renderCreateNewGameMenu(bs);
 			return;
 		}
 
-		if (inGame) {
+		if (gameState == GameState.PLAYING) {
 			screen.clear();
 			//int xScroll = player.getX() - (screen.width >> 1) + 32;
 			//int yScroll = player.getY() - (screen.height >> 1) + 32;

@@ -18,19 +18,44 @@ public class CreateNewGameMenu extends Menu {
 	private int titleHeight;
 	private MenuButton[] menuButtons;
 
+	public enum Action {
+		NONE(-1),
+		BACK(-1),
+		SELECT_SAVE_SLOT_1(0),
+		SELECT_SAVE_SLOT_2(1),
+		SELECT_SAVE_SLOT_3(2),
+		SELECT_SAVE_SLOT_4(3);
+
+		private final int saveSlotIndex;
+
+		Action(int saveSlotIndex) {
+			this.saveSlotIndex = saveSlotIndex;
+		}
+
+		public boolean selectsSaveSlot() {
+			return saveSlotIndex >= 0;
+		}
+
+		public int getSaveSlotIndex() {
+			return saveSlotIndex;
+		}
+	}
+
 	private enum MenuButton {
-		BACK("Back", true),
-		SLOT_1("Slot", true),
-		SLOT_2("Slot", true),
-		SLOT_3("Slot", true),
-		SLOT_4("Slot", true);
+		BACK("Back", true, Action.BACK),
+		SLOT_1("Slot", true, Action.SELECT_SAVE_SLOT_1),
+		SLOT_2("Slot", true, Action.SELECT_SAVE_SLOT_2),
+		SLOT_3("Slot", true, Action.SELECT_SAVE_SLOT_3),
+		SLOT_4("Slot", true, Action.SELECT_SAVE_SLOT_4);
 
 		final String assetName;
 		final boolean enabled;
+		final Action action;
 
-		MenuButton(String assetName, boolean enabled) {
+		MenuButton(String assetName, boolean enabled, Action action) {
 			this.assetName = assetName;
 			this.enabled = enabled;
+			this.action = action;
 		}
 	}
 
@@ -64,14 +89,16 @@ public class CreateNewGameMenu extends Menu {
 		}
 	}
 
-	public boolean isSlotGameClicked(int slotIndex, int displayWidth, int displayHeight) {
+	public Action getClickedAction(int displayWidth, int displayHeight) {
 		UiLayout layout = layout(displayWidth, displayHeight);
-		return buttons[MenuButton.SLOT_1.ordinal() + slotIndex].isClicked(layout.toDesignX(Mouse.getX()), layout.toDesignY(Mouse.getY()));
-	}
-
-	public boolean isBackClicked(int displayWidth, int displayHeight) {
-		UiLayout layout = layout(displayWidth, displayHeight);
-		return buttons[MenuButton.BACK.ordinal()].isClicked(layout.toDesignX(Mouse.getX()), layout.toDesignY(Mouse.getY()));
+		int mouseX = layout.toDesignX(Mouse.getX());
+		int mouseY = layout.toDesignY(Mouse.getY());
+		for (int i = 0; i < buttons.length; i++) {
+			if (buttons[i].isClicked(mouseX, mouseY)) {
+				return menuButtons[i].action;
+			}
+		}
+		return Action.NONE;
 	}
 
 	public void update() {
@@ -108,14 +135,6 @@ public class CreateNewGameMenu extends Menu {
 
 	private boolean isExist(int indexSlot){
 		return false;
-	}
-
-	public String[] getButtons(){
-		String[] textButtons = new String[menuButtons.length];
-		for (int i = 0; i < menuButtons.length; i++) {
-			textButtons[i] = menuButtons[i].name();
-		}
-		return textButtons;
 	}
 
 	private String getButtonAssetPath(MenuButton button, int index) {
