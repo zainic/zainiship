@@ -43,24 +43,28 @@ public abstract class Menu {
 		
 	}
 
+	protected UiLayout layout(int displayWidth, int displayHeight) {
+		return new UiLayout(designWidth, designHeight, displayWidth, displayHeight);
+	}
+
 	protected void drawScaled(Graphics g, BufferedImage image, int x, int y, int width, int height, int displayWidth, int displayHeight) {
-		g.drawImage(image, scaleX(x, displayWidth), scaleY(y, displayHeight), scaleX(width, displayWidth), scaleY(height, displayHeight), null);
+		layout(displayWidth, displayHeight).draw(g, image, x, y, width, height);
 	}
 
 	protected int toDesignX(int value, int displayWidth) {
-		return value * designWidth / displayWidth;
+		return layout(displayWidth, designHeight).toDesignX(value);
 	}
 
 	protected int toDesignY(int value, int displayHeight) {
-		return value * designHeight / displayHeight;
+		return layout(designWidth, displayHeight).toDesignY(value);
 	}
 
 	protected int scaleX(int value, int displayWidth) {
-		return value * displayWidth / designWidth;
+		return layout(displayWidth, designHeight).scaleX(value);
 	}
 
 	protected int scaleY(int value, int displayHeight) {
-		return value * displayHeight / designHeight;
+		return layout(designWidth, displayHeight).scaleY(value);
 	}
 
 	protected BufferedImage loadImage(String path) {

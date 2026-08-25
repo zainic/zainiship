@@ -1,6 +1,5 @@
 package com.zainic.zainiship.ui;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -31,9 +30,7 @@ public class MainMenu extends Menu {
 
 	private final BufferedImage background = loadImage("/menu/mainmenu/mainmenu_background.png");
 	private final BufferedImage title = loadImage("/menu/mainmenu/title.png");
-	private final BufferedImage[] initialButtons = new BufferedImage[MenuButton.values().length];
-	private final BufferedImage[] hoveredButtons = new BufferedImage[MenuButton.values().length];
-	private final BufferedImage[] clickedButtons = new BufferedImage[MenuButton.values().length];
+	private final Button[] buttons = new Button[MenuButton.values().length];
 
 	public MainMenu(int width, int height) {
 		super(width, height);
@@ -41,17 +38,18 @@ public class MainMenu extends Menu {
 		this.buttonHeight = height * 1 / 8;
 		this.buttonGap = height * 1 / 360;
 		this.firstButtonY = height * 2 / 7;
-		MenuButton[] buttons = MenuButton.values();
-		for (int i = 0; i < buttons.length; i++) {
-			String path = "/buttons/" + buttons[i].assetName;
-			initialButtons[i] = loadImage(path + "_init.png");
-			hoveredButtons[i] = loadImage(path + "_hovered.png");
-			clickedButtons[i] = loadImage(path + "_clicked.png");
+		MenuButton[] menuButtons = MenuButton.values();
+		for (int i = 0; i < menuButtons.length; i++) {
+			String path = "/buttons/" + menuButtons[i].assetName;
+			this.buttons[i] = new Button(getButtonX(), getButtonY(i), buttonWidth, buttonHeight,
+					loadImage(path + "_init.png"), loadImage(path + "_hovered.png"),
+					loadImage(path + "_clicked.png"), menuButtons[i].enabled);
 		}
 	}
 
 	public boolean isNewGameClicked(int displayWidth, int displayHeight) {
-		return isInsideButton(MenuButton.NEW_GAME.ordinal(), toDesignX(Mouse.getX(), displayWidth), toDesignY(Mouse.getY(), displayHeight));
+		UiLayout layout = layout(displayWidth, displayHeight);
+		return buttons[MenuButton.NEW_GAME.ordinal()].isClicked(layout.toDesignX(Mouse.getX()), layout.toDesignY(Mouse.getY()));
 	}
 
 	public void update() {
@@ -68,30 +66,17 @@ public class MainMenu extends Menu {
 		int titleHeight = titleWidth * title.getHeight() / title.getWidth();
 		drawScaled(g, title, (designWidth - titleWidth) / 2, 20, titleWidth, titleHeight, displayWidth, displayHeight);
 
-		int mouseX = toDesignX(Mouse.getX(), displayWidth);
-		int mouseY = toDesignY(Mouse.getY(), displayHeight);
-		MenuButton[] buttons = MenuButton.values();
-		for (int i = 0; i < buttons.length; i++) {
-			boolean hovered = isInsideButton(i, mouseX, mouseY);
-			BufferedImage buttonImage = initialButtons[i];
-			if (buttons[i].enabled && hovered) {
-				buttonImage = Mouse.getB() == Mouse.LMB ? clickedButtons[i] : hoveredButtons[i];
-			}
-			drawScaled(g, buttonImage, getButtonX(), getButtonY(i), buttonWidth, buttonHeight, displayWidth, displayHeight);
-			if (!buttons[i].enabled) {
-				g.setColor(new Color(0, 0, 0, 115));
-				g.fillRect(scaleX(getButtonX(), displayWidth), scaleY(getButtonY(i), displayHeight), scaleX(buttonWidth, displayWidth), scaleY(buttonHeight, displayHeight));
-			}
+		UiLayout layout = layout(displayWidth, displayHeight);
+		int mouseX = layout.toDesignX(Mouse.getX());
+		int mouseY = layout.toDesignY(Mouse.getY());
+		for (Button button : buttons) {
+			button.render(g, layout, mouseX, mouseY, Mouse.getB() == Mouse.LMB);
 		}
 
 		//render black screen for fade in or out
 		if (this.alphaFade != 0){
 			drawBlackFade(g, displayWidth, displayHeight, this.alphaFade);
 		}
-	}
-
-	private boolean isInsideButton(int buttonIndex, int x, int y) {
-		return x >= getButtonX() && x < getButtonX() + buttonWidth && y >= getButtonY(buttonIndex) && y < getButtonY(buttonIndex) + buttonHeight;
 	}
 
 	private int getButtonX() {
