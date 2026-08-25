@@ -9,7 +9,6 @@ import java.awt.Graphics2D;
 
 public class LoadingMenu extends Menu {
 
-	private int time;
 	private int backgroundWidth;
 	private int backgroundHeight;
 	private int xOffset;
@@ -96,21 +95,30 @@ public class LoadingMenu extends Menu {
 		this.xOffset = (int) ((Math.sin(this.time * 0.005) * (this.backgroundWidth - this.designWidth) / 2) + (this.backgroundWidth - this.designWidth) / 2);
 		this.yOffset = 0;
 		this.backgroundDirty = true;
-		this.titleAlpha = Math.min(1.0f, this.time / 60.0f);
+		if (this.time <= 60) {
+			if (this.alphaFade == 1) this.startFadeIn = this.time;
+			this.alphaFade = Math.max(0.0f, (60.0f - this.time) / 60.0f);
+		}
 		if (this.time > 60) {
-			this.yTitleOffset = (int) (- Math.min( 60, this.time - 60));
+			this.titleAlpha = Math.min(1.0f, this.time - 60 / 60.0f);
+		}
+		else {
+			this.titleAlpha = 0;
+		}
+		if (this.time > 120) {
+			this.yTitleOffset = (int) (- Math.min( 60, this.time - 120));
 		} else {
 			this.yTitleOffset = 0;
 		}
-		if (this.time > 120) {
-			this.barAlpha = Math.min(1.0f, (this.time - 120) / 30.0f);
+		if (this.time > 180) {
+			this.barAlpha = Math.min(1.0f, (this.time - 180) / 30.0f);
 		} else {
 			this.barAlpha = 0.0f;
 		}
-		if (this.time > 150) {
+		if (this.time > 210) {
 			double boost;
 			if (this.time <= 300) {
-				boost = 2 ;
+				boost = 10 ;
 			}
 			else {
 				boost = 0;
@@ -118,7 +126,11 @@ public class LoadingMenu extends Menu {
 			this.barProgress = Math.min(1.0f, this.barProgress + ( boost + 10 * Math.exp(- Math.random() * 10)) / 1000.0f);
 			int textIndex = (int) Math.min(loadingTextList.length - 1, (this.barProgress * (loadingTextList.length)));
 			this.currentLoadingText = loadingTextList[textIndex];
-			if (this.time % 120 == 0 || this.time == 151) this.currentSubText = subTextList[(int) (Math.random() * subTextList.length)];
+			if (this.time % 120 == 0 || this.time == 211) this.currentSubText = subTextList[(int) (Math.random() * subTextList.length)];
+		}
+		if (this.barProgress >= 1.0f) {
+			if (this.alphaFade == 0) this.startFadeOut = this.time - 1;
+			this.alphaFade = Math.min(1.0f, (this.time - this.startFadeOut) / 60.0f);
 		}
 	}
 
@@ -169,6 +181,11 @@ public class LoadingMenu extends Menu {
 				measuredSubText = currentSubText;
 			}
 			g.drawString(currentSubText, (designWidth - subTextWidth) / 2, designHeight * 4 / 7 + barHeight + 35);
+		}
+
+		//render black screen for fade in or out
+		if (this.alphaFade != 0){
+			drawBlackFade(g, displayWidth, displayHeight, this.alphaFade);
 		}
 	}
 

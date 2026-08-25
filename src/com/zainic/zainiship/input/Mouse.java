@@ -10,6 +10,7 @@ public class Mouse implements MouseListener, MouseMotionListener{
 	private static int mouseY = -1;
 	private static int mouseB = -1;
 	private static boolean mouseInScreen = false;
+	private static boolean leftClickPending = false;
 	
 	public static final int RMB = 3;
 	public static final int LMB = 1;
@@ -50,6 +51,10 @@ public class Mouse implements MouseListener, MouseMotionListener{
 	@Override
 	public void mousePressed(MouseEvent e) {
 		mouseB = e.getButton();
+
+		if (e.getButton() == LMB) {
+			leftClickPending = true;
+		}
 	}
 
 	@Override
@@ -65,6 +70,15 @@ public class Mouse implements MouseListener, MouseMotionListener{
 	@Override
 	public void mouseExited(MouseEvent e) {
 		mouseInScreen = false;
+	}
+
+	public static boolean consumeLeftClick() {
+		if (!leftClickPending) {
+			return false;
+		}
+
+		leftClickPending = false;
+		return true;
 	}
 
 }

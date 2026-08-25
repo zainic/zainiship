@@ -51,12 +51,15 @@ public class MainMenu extends Menu {
 	}
 
 	public boolean isNewGameClicked(int displayWidth, int displayHeight) {
-		if (Mouse.getB() != Mouse.LMB) return false;
 		return isInsideButton(MenuButton.NEW_GAME.ordinal(), toDesignX(Mouse.getX(), displayWidth), toDesignY(Mouse.getY(), displayHeight));
 	}
 
 	public void update() {
 		this.time++;
+		if (this.time <= 60) {
+			if (this.alphaFade == 1) this.startFadeIn = this.time;
+			this.alphaFade = Math.max(0.0f, (60.0f - this.time) / 60.0f);
+		}
 	}
 
 	public void render(Graphics g, int displayWidth, int displayHeight) {
@@ -79,6 +82,11 @@ public class MainMenu extends Menu {
 				g.setColor(new Color(0, 0, 0, 115));
 				g.fillRect(scaleX(getButtonX(), displayWidth), scaleY(getButtonY(i), displayHeight), scaleX(buttonWidth, displayWidth), scaleY(buttonHeight, displayHeight));
 			}
+		}
+
+		//render black screen for fade in or out
+		if (this.alphaFade != 0){
+			drawBlackFade(g, displayWidth, displayHeight, this.alphaFade);
 		}
 	}
 
