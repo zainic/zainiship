@@ -3,7 +3,6 @@ package com.zainic.zainiship.ui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -19,20 +18,22 @@ public abstract class Menu {
 
 	protected int designWidth;
 	protected int designHeight;
+	protected boolean inAnimation;
 	protected int time;
-	protected double alphaFade;
-	protected int startFadeIn;
-	protected int startFadeOut;
 
 	public Menu(int width, int height) {
 		this.designWidth = width;
 		this.designHeight = height;
 		this.time = 0;
+		this.inAnimation = false;
 	}
 
 	public void update() {
 		this.time++;
-		// No dynamic elements to update in the main menu for now
+	}
+
+	public void onEnter() {
+		this.time = 0;
 	}
 
 	public int getTime() {
@@ -75,27 +76,8 @@ public abstract class Menu {
 		}
 	}
 
-	protected void performAnimationIn () {
-
-	}
-
-	protected void performAnimation () {
-
-	}
-
-	protected void performAnimationOut () {
-
-	}
-
-	protected void drawBlackFade(Graphics g, int displayWidth, int displayHeight, double alpha) {
-		Graphics2D fadeGraphics = (Graphics2D) g.create();
-		fadeGraphics.setColor(new Color(0, 0, 0, (int) (alpha * 255)));
-		fadeGraphics.fillRect(0, 0, displayWidth, displayHeight);
-		fadeGraphics.dispose();
-	}
-
-	public double getAlphaFade(){
-		return this.alphaFade;
+	public boolean getStatusAnimation() {
+		return inAnimation;
 	}
 
 }

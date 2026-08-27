@@ -33,14 +33,16 @@ public final class MenuManager {
 		switch (state) {
 			case LOADING:
 				loadingMenu.update();
-				if (loadingMenu.getProgressBar() >= 100 && loadingMenu.getAlphaFade() >= 1.0f) {
+				if (loadingMenu.getProgressBar() >= 100) {
 					state = MenuState.MAIN_MENU;
+					activeMenu().onEnter();
 				}
 				return MenuResult.NONE;
 			case MAIN_MENU:
 				mainMenu.update();
 				if (Mouse.consumeLeftClick() && mainMenu.isNewGameClicked(displayWidth, displayHeight)) {
 					state = MenuState.CREATE_NEW_GAME;
+					activeMenu().onEnter();
 				}
 				return MenuResult.NONE;
 			case CREATE_NEW_GAME:
@@ -51,6 +53,7 @@ public final class MenuManager {
 				CreateNewGameMenu.Action action = createNewGameMenu.getClickedAction(displayWidth, displayHeight);
 				if (action == CreateNewGameMenu.Action.BACK) {
 					state = MenuState.MAIN_MENU;
+					activeMenu().onEnter();
 					return MenuResult.NONE;
 				}
 				return action.selectsSaveSlot() ? MenuResult.START_GAME : MenuResult.NONE;
@@ -59,19 +62,16 @@ public final class MenuManager {
 		}
 	}
 
-	public void render(Graphics g, int displayWidth, int displayHeight) {
+	private Menu activeMenu() {
 		switch (state) {
-			case LOADING:
-				loadingMenu.render(g, displayWidth, displayHeight);
-				return;
-			case MAIN_MENU:
-				mainMenu.render(g, displayWidth, displayHeight);
-				return;
-			case CREATE_NEW_GAME:
-				createNewGameMenu.render(g, displayWidth, displayHeight);
-				return;
-			default:
-				throw new IllegalStateException("Unhandled menu state: " + state);
+			case LOADING: return loadingMenu;
+			case MAIN_MENU: return mainMenu;
+			case CREATE_NEW_GAME: return createNewGameMenu;
+			default: throw new IllegalStateException("Unhandled menu state: " + state);
 		}
+	}
+
+	public void render(Graphics g, int displayWidth, int displayHeight) {
+		activeMenu().render(g, displayWidth, displayHeight);
 	}
 }
