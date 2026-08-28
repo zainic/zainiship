@@ -54,7 +54,6 @@ public class Main extends Canvas implements Runnable{
 	public Main() {
 		Dimension size = new Dimension(width*scale, height*scale);
 		this.setPreferredSize(size);
-		menuManager = new MenuManager(width, height);
 
 		// Start in the loading screen.
 		gameState = GameState.MENU;
@@ -64,6 +63,7 @@ public class Main extends Canvas implements Runnable{
 		level = Level.level1;
 		level.init(screen);
 		key = new Keyboard();
+		menuManager = new MenuManager(width, height, key);
 		player = new Player((width >> 1), (height >> 1), key);
 		player.init(level, screen);
 		level.addAlliesMob(player);

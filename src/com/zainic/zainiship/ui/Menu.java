@@ -15,6 +15,7 @@ public abstract class Menu {
 	protected static final Color TEXT_COLOR_WHITE = Color.WHITE;
 	protected static final Font ORBITRON_BOLD_20 = CustomFont.orbitron20.get("Bold");
 	protected static final Font ORBITRON_REGULAR_15 = CustomFont.orbitron15.get("Regular");
+	protected static final Font ORBITRON_REGULAR_20 = CustomFont.orbitron20.get("Regular");
 
 	protected int designWidth;
 	protected int designHeight;

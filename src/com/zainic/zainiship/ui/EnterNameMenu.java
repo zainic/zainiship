@@ -1,15 +1,22 @@
 package com.zainic.zainiship.ui;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
+import com.zainic.zainiship.input.Keyboard;
 import com.zainic.zainiship.input.Mouse;
 import com.zainic.zainiship.ui.animation.Tween;
 
 public class EnterNameMenu extends Menu {
+	private static final int MAX_NAME_LENGTH = 16;
+	private static final int KEY_REPEAT_DELAY = 20;
+	private static final int KEY_REPEAT_INTERVAL = 3;
 
 	private int backgroundWidth;
 	private int backgroundHeight;
@@ -30,6 +37,11 @@ public class EnterNameMenu extends Menu {
 	private int[] pixels, background;
 	private MenuButton[] menuButtons;
 	private boolean backgroundDirty;
+	private final Keyboard keyboard;
+	private final StringBuilder enteredName = new StringBuilder();
+	private int caretIndex;
+	private int leftKeyTicks, rightKeyTicks, backspaceKeyTicks, deleteKeyTicks;
+	private boolean homeWasDown, endWasDown;
 
 	public enum Action {
 		NONE,
@@ -73,8 +85,9 @@ public class EnterNameMenu extends Menu {
 	private final Tween backButtonAlpha, exitBackButtonAlpha;
 	private final Tween okButtonAlpha, exitOkButtonAlpha;
 
-	public EnterNameMenu(int width, int height) {
+	public EnterNameMenu(int width, int height, Keyboard keyboard) {
 		super(width, height);
+		this.keyboard = keyboard;
 		this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		this.pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 		this.backgroundWidth = backgroundImage.getWidth();
@@ -167,6 +180,10 @@ public class EnterNameMenu extends Menu {
 		UiLayout layout = layout(displayWidth, displayHeight);
 		int mouseX = layout.toDesignX(Mouse.getX());
 		int mouseY = layout.toDesignY(Mouse.getY());
+		if (isInsideNameField(mouseX, mouseY)) {
+			placeCaretAt(mouseX);
+			return Action.NONE;
+		}
 		for (int i = 0; i < buttons.length; i++) {
 			if (buttons[i].isClicked(mouseX, mouseY)) {
 				return menuButtons[i].action;
@@ -229,6 +246,12 @@ public class EnterNameMenu extends Menu {
 	@Override
 	public void onEnter(MenuManager.MenuState fromState){
 		super.onEnter(fromState);
+		enteredName.setLength(0);
+		caretIndex = 0;
+		leftKeyTicks = rightKeyTicks = backspaceKeyTicks = deleteKeyTicks = 0;
+		homeWasDown = endWasDown = false;
+		keyboard.consumeTypedCharacters();
+		keyboard.consumeBackspace();
 		backgroundDirty = true;
 		leftWindowOffsetY.reset();
 		rightWindowOffsetY.reset();
@@ -275,6 +298,32 @@ public class EnterNameMenu extends Menu {
 			exitOkButtonAlpha.update();
 			return;
 		}
+		for (char character : keyboard.consumeTypedCharacters().toCharArray()) {
+			if (enteredName.length() < MAX_NAME_LENGTH
+					&& (Character.isLetterOrDigit(character) || character == ' ' || character == '-' || character == '_')) {
+				enteredName.insert(caretIndex, character);
+				caretIndex++;
+			}
+		}
+		keyboard.consumeBackspace();
+		leftKeyTicks = updateRepeatingKey(KeyEvent.VK_LEFT, leftKeyTicks, () -> {
+			if (caretIndex > 0) caretIndex--;
+		});
+		rightKeyTicks = updateRepeatingKey(KeyEvent.VK_RIGHT, rightKeyTicks, () -> {
+			if (caretIndex < enteredName.length()) caretIndex++;
+		});
+		backspaceKeyTicks = updateRepeatingKey(KeyEvent.VK_BACK_SPACE, backspaceKeyTicks, () -> {
+			if (caretIndex > 0) enteredName.deleteCharAt(--caretIndex);
+		});
+		deleteKeyTicks = updateRepeatingKey(KeyEvent.VK_DELETE, deleteKeyTicks, () -> {
+			if (caretIndex < enteredName.length()) enteredName.deleteCharAt(caretIndex);
+		});
+		boolean homeDown = keyboard.isKeyDown(KeyEvent.VK_HOME);
+		if (homeDown && !homeWasDown) caretIndex = 0;
+		homeWasDown = homeDown;
+		boolean endDown = keyboard.isKeyDown(KeyEvent.VK_END);
+		if (endDown && !endWasDown) caretIndex = enteredName.length();
+		endWasDown = endDown;
 		leftWindowOffsetY.update();
 		rightWindowOffsetY.update();
 		leftWindowOffsetX.update();
@@ -388,6 +437,25 @@ public class EnterNameMenu extends Menu {
 		drawScaled(rightGraphics, rightEnterNameWindowImage, rightX, rightY, sideWidth, windowHeight, displayWidth, displayHeight);
 		rightGraphics.dispose();
 
+		// ==== Render Name Field ====
+		if (backgroundAlpha > 0) {
+			Graphics2D textGraphics = (Graphics2D) g.create();
+			textGraphics.scale(displayWidth / (double) designWidth, displayHeight / (double) designHeight);
+			textGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, backgroundAlpha));
+			textGraphics.setColor(Color.WHITE);
+			textGraphics.setFont(Menu.ORBITRON_REGULAR_20);
+			String displayedName = enteredName.toString();
+			FontMetrics metrics = textGraphics.getFontMetrics();
+			int textX = centerX - metrics.stringWidth(displayedName) / 2;
+			int textY = centerY - designHeight / 12 + (metrics.getAscent() - metrics.getDescent()) / 2;
+			textGraphics.drawString(displayedName, textX, textY);
+			if (!exiting && (System.currentTimeMillis() / 500) % 2 == 0) {
+				int caretX = textX + metrics.stringWidth(displayedName.substring(0, caretIndex));
+				textGraphics.drawLine(caretX, textY - metrics.getAscent(), caretX, textY + metrics.getDescent());
+			}
+			textGraphics.dispose();
+		}
+
 		// ==== Render Buttons ====
 		// initiate variable
 		UiLayout layout = layout(displayWidth, displayHeight);
@@ -410,6 +478,48 @@ public class EnterNameMenu extends Menu {
 					0, offset);
 			buttonGraphics.dispose();
 		}
+	}
+
+	public String getEnteredName() {
+		return enteredName.toString().trim();
+	}
+
+	private int updateRepeatingKey(int keyCode, int heldTicks, Runnable action) {
+		if (!keyboard.isKeyDown(keyCode)) return 0;
+		if (heldTicks == 0 || (heldTicks >= KEY_REPEAT_DELAY
+				&& (heldTicks - KEY_REPEAT_DELAY) % KEY_REPEAT_INTERVAL == 0)) {
+			action.run();
+		}
+		return heldTicks + 1;
+	}
+
+	private boolean isInsideNameField(int x, int y) {
+		int centerX = designWidth / 2;
+		int centerY = designHeight / 2 - designHeight / 12;
+		return x >= centerX - backgroundEnterNameWindowWidth / 2
+				&& x < centerX + backgroundEnterNameWindowWidth / 2
+				&& y >= centerY - backgroundEnterNameWindowHeight / 2
+				&& y < centerY + backgroundEnterNameWindowHeight / 2;
+	}
+
+	private void placeCaretAt(int mouseX) {
+		Graphics2D metricsGraphics = image.createGraphics();
+		metricsGraphics.setFont(Menu.ORBITRON_REGULAR_20);
+		FontMetrics metrics = metricsGraphics.getFontMetrics();
+		String name = enteredName.toString();
+		int textStartX = designWidth / 2 - metrics.stringWidth(name) / 2;
+		int closestIndex = 0;
+		int closestDistance = Integer.MAX_VALUE;
+		for (int i = 0; i <= name.length(); i++) {
+			int boundaryX = textStartX + metrics.stringWidth(name.substring(0, i));
+			int distance = Math.abs(mouseX - boundaryX);
+			if (distance < closestDistance) {
+				closestDistance = distance;
+				closestIndex = i;
+			}
+		}
+		metricsGraphics.dispose();
+		caretIndex = closestIndex;
 	}
 
 	private int getButtonX(MenuButton button) {

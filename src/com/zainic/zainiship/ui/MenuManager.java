@@ -2,6 +2,7 @@ package com.zainic.zainiship.ui;
 
 import java.awt.Graphics;
 
+import com.zainic.zainiship.input.Keyboard;
 import com.zainic.zainiship.input.Mouse;
 
 /** Owns menu state, input handling, rendering, and transitions within the menu flow. */
@@ -30,11 +31,15 @@ public final class MenuManager {
 	private final CreateNewGameMenu createNewGameMenu;
 	private final EnterNameMenu enterNameMenu;
 
-	public MenuManager(int designWidth, int designHeight) {
+	public MenuManager(int designWidth, int designHeight, Keyboard keyboard) {
 		loadingMenu = new LoadingMenu(designWidth, designHeight);
 		mainMenu = new MainMenu(designWidth, designHeight);
 		createNewGameMenu = new CreateNewGameMenu(designWidth, designHeight);
-		enterNameMenu = new EnterNameMenu(designWidth, designHeight);
+		enterNameMenu = new EnterNameMenu(designWidth, designHeight, keyboard);
+	}
+
+	public String getPlayerName() {
+		return enterNameMenu.getEnteredName();
 	}
 
 	public MenuResult update(int displayWidth, int displayHeight) {
@@ -152,7 +157,10 @@ public final class MenuManager {
 						enterNameMenu.startExit(nextState);
 						return MenuResult.NONE;
 					case OK:
-						return MenuResult.START_GAME;
+						if (!enterNameMenu.getEnteredName().isEmpty()) {
+							return MenuResult.START_GAME;
+						}
+						return MenuResult.NONE;
 					default:
 						nextState = MenuState.ENTER_NAME;
 						return MenuResult.NONE;
