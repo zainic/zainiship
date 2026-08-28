@@ -58,10 +58,10 @@ public class MainMenu extends Menu {
 
 	public MainMenu(int width, int height) {
 		super(width, height);
-		this.buttonWidth = width * 1 / 4;
-		this.buttonHeight = height * 1 / 8;
-		this.buttonGap = height * 1 / 360;
-		this.firstButtonY = height * 2 / 7;
+		this.buttonWidth = designWidth * 1 / 4;
+		this.buttonHeight = designHeight * 1 / 8;
+		this.buttonGap = designHeight * 1 / 360;
+		this.firstButtonY = designHeight * 2 / 7;
 		this.menuButtons = MenuButton.values();
 		for (int i = 0; i < menuButtons.length; i++) {
 			String path = "/buttons/" + menuButtons[i].assetName;
@@ -98,9 +98,9 @@ public class MainMenu extends Menu {
 	}
 
 	@Override
-	public void startExit() {
+	public void startExit(MenuManager.MenuState toState) {
 		if (exiting) return;
-		exiting = true;
+		super.startExit(toState);
 		exitTitleAlpha.reset();
 		for (Tween tween : exitButtonOffsetX) tween.reset();
 	}
@@ -115,7 +115,7 @@ public class MainMenu extends Menu {
 	@Override
 	public void onEnter(MenuManager.MenuState fromState) {
 		super.onEnter(fromState);
-		if (fromState.equals(MenuManager.MenuState.LOADING)) {
+		if (this.fromState.equals(MenuManager.MenuState.LOADING)) {
 			backgroundAlpha.reset();
 		}
 		titleAlpha.reset();

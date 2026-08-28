@@ -16,6 +16,7 @@ public final class MenuManager {
 		LOADING,
 		MAIN_MENU,
 		CREATE_NEW_GAME,
+		ENTER_NAME,
 		LOAD_GAME,
 		SETTINGS,
 		INFORMATION,
@@ -27,11 +28,13 @@ public final class MenuManager {
 	private final LoadingMenu loadingMenu;
 	private final MainMenu mainMenu;
 	private final CreateNewGameMenu createNewGameMenu;
+	private final EnterNameMenu enterNameMenu;
 
 	public MenuManager(int designWidth, int designHeight) {
 		loadingMenu = new LoadingMenu(designWidth, designHeight);
 		mainMenu = new MainMenu(designWidth, designHeight);
 		createNewGameMenu = new CreateNewGameMenu(designWidth, designHeight);
+		enterNameMenu = new EnterNameMenu(designWidth, designHeight);
 	}
 
 	public MenuResult update(int displayWidth, int displayHeight) {
@@ -61,9 +64,6 @@ public final class MenuManager {
 					return MenuResult.NONE;
 				}
 				MainMenu.Action mainMenuAction = mainMenu.getClickedAction(displayWidth, displayHeight);
-				if (!(mainMenuAction.equals(MainMenu.Action.NONE))) {
-					mainMenu.startExit();
-				}
 				switch(mainMenuAction) {
 					case NEW_GAME:
 						nextState = MenuState.CREATE_NEW_GAME;
@@ -83,6 +83,9 @@ public final class MenuManager {
 					default:
 						nextState = MenuState.MAIN_MENU;
 				}
+				if (mainMenuAction != MainMenu.Action.NONE) {
+					mainMenu.startExit(nextState);
+				}
 				return MenuResult.NONE;
 			case CREATE_NEW_GAME:
 				createNewGameMenu.update();
@@ -101,23 +104,57 @@ public final class MenuManager {
 					return MenuResult.NONE;
 				}
 				CreateNewGameMenu.Action createNewMenuAction = createNewGameMenu.getClickedAction(displayWidth, displayHeight);
-				if (!(createNewMenuAction.equals(CreateNewGameMenu.Action.NONE))) {
-					createNewGameMenu.startExit();
-				}
 				switch(createNewMenuAction) {
 					case BACK:
 						nextState = MenuState.MAIN_MENU;
+						createNewGameMenu.startExit(nextState);
 						return MenuResult.NONE;
 					case SELECT_SAVE_SLOT_1:
-						return MenuResult.START_GAME;
+						nextState = MenuState.ENTER_NAME;
+						createNewGameMenu.startExit(nextState);
+						return MenuResult.NONE;
 					case SELECT_SAVE_SLOT_2:
-						return MenuResult.START_GAME;
+						nextState = MenuState.ENTER_NAME;
+						createNewGameMenu.startExit(nextState);
+						return MenuResult.NONE;
 					case SELECT_SAVE_SLOT_3:
-						return MenuResult.START_GAME;
+						nextState = MenuState.ENTER_NAME;
+						createNewGameMenu.startExit(nextState);
+						return MenuResult.NONE;
 					case SELECT_SAVE_SLOT_4:
-						return MenuResult.START_GAME;
+						nextState = MenuState.ENTER_NAME;
+						createNewGameMenu.startExit(nextState);
+						return MenuResult.NONE;
 					default:
 						nextState = MenuState.CREATE_NEW_GAME;
+						return MenuResult.NONE;
+				}
+			case ENTER_NAME:
+				enterNameMenu.update();
+				if (enterNameMenu.isExitFinished()) {
+					Mouse.consumeLeftClick();
+					fromState = state;
+					state = nextState;
+					activeMenu().onEnter(fromState);
+					return MenuResult.NONE;
+				}
+				if (enterNameMenu.isExiting()) {
+					Mouse.consumeLeftClick();
+					return MenuResult.NONE;
+				}
+				if (!Mouse.consumeLeftClick()) {
+					return MenuResult.NONE;
+				}
+				EnterNameMenu.Action enterNameMenuAction = enterNameMenu.getClickedAction(displayWidth, displayHeight);
+				switch(enterNameMenuAction) {
+					case BACK:
+						nextState = MenuState.CREATE_NEW_GAME;
+						enterNameMenu.startExit(nextState);
+						return MenuResult.NONE;
+					case OK:
+						return MenuResult.START_GAME;
+					default:
+						nextState = MenuState.ENTER_NAME;
 						return MenuResult.NONE;
 				}
 			default:
@@ -130,6 +167,7 @@ public final class MenuManager {
 			case LOADING: return loadingMenu;
 			case MAIN_MENU: return mainMenu;
 			case CREATE_NEW_GAME: return createNewGameMenu;
+			case ENTER_NAME: return enterNameMenu;
 			default: throw new IllegalStateException("Unhandled menu state: " + state);
 		}
 	}

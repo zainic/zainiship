@@ -158,10 +158,12 @@ public class CreateNewGameMenu extends Menu {
 	}
 
 	@Override
-	public void startExit() {
+	public void startExit(MenuManager.MenuState toState) {
 		if (exiting) return;
-		exiting = true;
-		exitBackgroundOffsetY.reset();
+		super.startExit(toState);
+		if (toState != MenuManager.MenuState.ENTER_NAME) {
+			exitBackgroundOffsetY.reset();
+		}
 		exitTitleAlpha.reset();
 		exitBackButtonOffsetX.reset();
 		for (Tween tween : exitSlotButtonAlpha) tween.reset();
@@ -169,23 +171,34 @@ public class CreateNewGameMenu extends Menu {
 
 	@Override
 	public boolean isExitFinished() {
-		return exiting
-			&& exitBackgroundOffsetY.isFinished()
-			&& exitTitleAlpha.isFinished()
+		if (!exiting) return false;
+
+		boolean commonAnimationsFinished = exitTitleAlpha.isFinished()
 			&& exitBackButtonOffsetX.isFinished()
 			&& Arrays.stream(exitSlotButtonAlpha).allMatch(Tween::isFinished);
+
+		switch (exitToState) {
+			case ENTER_NAME:
+				return commonAnimationsFinished;
+			case MAIN_MENU:
+				return commonAnimationsFinished && exitBackgroundOffsetY.isFinished();
+			default:
+				throw new IllegalStateException("Unsupported Create New Game exit: " + exitToState);
+		}
 	}
 
 	@Override
 	public void onEnter(MenuManager.MenuState fromState){
 		super.onEnter(fromState);
 		backgroundDirty = true;
-		backgroundOffsetY.reset();
+		if (this.fromState != MenuManager.MenuState.ENTER_NAME) {
+			backgroundOffsetY.reset();
+			exitBackgroundOffsetY.reset();
+		}
 		titleAlpha.reset();
 		backButtonOffsetX.reset();
 		for (Tween tween : slotButtonAlpha) tween.reset();
 		for (Tween tween : slotButtonOffsetY) tween.reset();
-		exitBackgroundOffsetY.reset();
 		exitTitleAlpha.reset();
 		exitBackButtonOffsetX.reset();
 		for (Tween tween : exitSlotButtonAlpha) tween.reset();
@@ -196,13 +209,17 @@ public class CreateNewGameMenu extends Menu {
 		this.time++;
 		backgroundDirty = true;
 		if (exiting) {
-			exitBackgroundOffsetY.update();
+			if (exitToState != MenuManager.MenuState.ENTER_NAME) {
+				exitBackgroundOffsetY.update();
+			}
 			exitTitleAlpha.update();
 			exitBackButtonOffsetX.update();
 			for (Tween tween : exitSlotButtonAlpha) tween.update();
 			return;
 		}
-		backgroundOffsetY.update();
+		if (this.fromState != MenuManager.MenuState.ENTER_NAME) {
+			backgroundOffsetY.update();
+		}
 		titleAlpha.update();
 		backButtonOffsetX.update();
 		for (Tween tween : slotButtonAlpha) tween.update();

@@ -61,4 +61,12 @@ public final class Button {
 			g.fillRect(layout.scaleX(x + offsetX), layout.scaleY(y + offsetY), layout.scaleX(width), layout.scaleY(height));
 		}
 	}
+
+	public int getButtonWidth() {
+		return normalImage.getWidth();
+	}
+
+	public int getButtonHeight() {
+		return normalImage.getHeight();
+	}
 }

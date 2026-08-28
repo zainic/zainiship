@@ -19,6 +19,8 @@ public abstract class Menu {
 	protected int designWidth;
 	protected int designHeight;
 	protected boolean exiting;
+	protected MenuManager.MenuState exitToState;
+	protected MenuManager.MenuState fromState;
 	protected int time;
 
 	public Menu(int width, int height) {
@@ -27,9 +29,15 @@ public abstract class Menu {
 		this.time = 0;
 	}
 
-	public void startExit() {
+	public void startExit(MenuManager.MenuState toState) {
 		if (exiting) return;
+		if (toState == null) throw new IllegalArgumentException("Exit destination cannot be null");
+		exitToState = toState;
 		exiting = true;
+	}
+
+	public MenuManager.MenuState getExitToState() {
+		return exitToState;
 	}
 
 	public boolean isExiting() {
@@ -47,6 +55,8 @@ public abstract class Menu {
 	public void onEnter(MenuManager.MenuState fromState) {
 		this.time = 0;
 		this.exiting = false;
+		this.fromState = fromState;
+		this.exitToState = null;
 	}
 
 	public int getTime() {
