@@ -3,7 +3,6 @@ package com.zainic.zainiship.ui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -19,10 +18,8 @@ public abstract class Menu {
 
 	protected int designWidth;
 	protected int designHeight;
+	protected boolean exiting;
 	protected int time;
-	protected double alphaFade;
-	protected int startFadeIn;
-	protected int startFadeOut;
 
 	public Menu(int width, int height) {
 		this.designWidth = width;
@@ -30,9 +27,26 @@ public abstract class Menu {
 		this.time = 0;
 	}
 
+	public void startExit() {
+		if (exiting) return;
+		exiting = true;
+	}
+
+	public boolean isExiting() {
+		return exiting;
+	}
+
+	public boolean isExitFinished() {
+		return exiting;
+	}
+
 	public void update() {
 		this.time++;
-		// No dynamic elements to update in the main menu for now
+	}
+
+	public void onEnter(MenuManager.MenuState fromState) {
+		this.time = 0;
+		this.exiting = false;
 	}
 
 	public int getTime() {
@@ -73,29 +87,6 @@ public abstract class Menu {
 		} catch (IOException | IllegalArgumentException e) {
 			throw new IllegalStateException("Could not load menu asset: " + path, e);
 		}
-	}
-
-	protected void performAnimationIn () {
-
-	}
-
-	protected void performAnimation () {
-
-	}
-
-	protected void performAnimationOut () {
-
-	}
-
-	protected void drawBlackFade(Graphics g, int displayWidth, int displayHeight, double alpha) {
-		Graphics2D fadeGraphics = (Graphics2D) g.create();
-		fadeGraphics.setColor(new Color(0, 0, 0, (int) (alpha * 255)));
-		fadeGraphics.fillRect(0, 0, displayWidth, displayHeight);
-		fadeGraphics.dispose();
-	}
-
-	public double getAlphaFade(){
-		return this.alphaFade;
 	}
 
 }

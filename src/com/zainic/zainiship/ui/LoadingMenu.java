@@ -4,19 +4,20 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+
+import com.zainic.zainiship.ui.animation.Tween;
+
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 public class LoadingMenu extends Menu {
 
 	private int backgroundWidth;
 	private int backgroundHeight;
-	private int xOffset;
-	private int yOffset;
+	private int backgroundOffsetX;
+	private int backgroundOffsetY;
 	private int[] pixels, background;
-	private float titleAlpha, barAlpha;
-	private double barProgress;
-	private int yTitleOffset;
 	private String[] loadingTextList;
 	private String[] subTextList;
 	private String currentLoadingText;
@@ -25,13 +26,17 @@ public class LoadingMenu extends Menu {
 	private String measuredSubText;
 	private int loadingTextWidth;
 	private int subTextWidth;
-	private boolean backgroundDirty = true;
-	private final BufferedImage image;
+	private double barProgress;
 
+	private boolean backgroundDirty = true;
+	
+	private final BufferedImage image;
 	private final BufferedImage backgroundImage = loadImage("/menu/loadingmenu/loadingmenu_background.png");
 	private final BufferedImage titleImage = loadImage("/menu/loadingmenu/title.png");
 	private final BufferedImage unfilledloadingbarImage = loadImage("/menu/loadingmenu/unfilledloadingbar.png");
 	private final BufferedImage filledloadingbarImage = loadImage("/menu/loadingmenu/filledloadingbar.png");
+	private final Tween titleAlpha, barAlpha, backgroundAlphaIn, backgroundAlphaOut;
+	private final Tween yTitleOffset;
 
 	public LoadingMenu(int width, int height) {
 		super(width, height);
@@ -42,6 +47,12 @@ public class LoadingMenu extends Menu {
 		this.backgroundHeight = backgroundImage.getHeight();
 		this.background = new int[backgroundWidth * backgroundHeight];
 		backgroundImage.getRGB(0, 0, backgroundWidth, backgroundHeight, background, 0, backgroundWidth);
+		this.titleAlpha = new Tween(0, 1, 60, 60);
+		this.barAlpha = new Tween(0, 1, 30, 180);
+		this.backgroundAlphaIn = new Tween(0, 1,60, 0, "ease-out" );
+		this.backgroundAlphaOut = new Tween(0, 1,60, 0, "ease-in" );
+		this.yTitleOffset = new Tween(0, -60, 60, 120);
+		this.barProgress = 0;
 
 		this.loadingTextList = new String[] {
 			"Initializing systems",
@@ -90,55 +101,53 @@ public class LoadingMenu extends Menu {
 		};
 	}
 
+	@Override
+	public void onEnter(MenuManager.MenuState fromState) {
+		super.onEnter(fromState);
+		titleAlpha.reset();
+		barAlpha.reset();
+		backgroundAlphaIn.reset();
+		backgroundAlphaOut.reset();
+		yTitleOffset.reset();
+		barProgress = 0;
+	}
+
+	@Override
 	public void update() {
-		this.time++;
-		this.xOffset = (int) ((Math.sin(this.time * 0.005) * (this.backgroundWidth - this.designWidth) / 2) + (this.backgroundWidth - this.designWidth) / 2);
-		this.yOffset = 0;
+		super.update();
+		this.backgroundOffsetX = (int) ((Math.sin(this.time * 0.005) * (this.backgroundWidth - this.designWidth) / 2) + (this.backgroundWidth - this.designWidth) / 2);
+		this.backgroundOffsetY = 0;
 		this.backgroundDirty = true;
-		if (this.time <= 60) {
-			if (this.alphaFade == 1) this.startFadeIn = this.time;
-			this.alphaFade = Math.max(0.0f, (60.0f - this.time) / 60.0f);
-		}
-		if (this.time > 60) {
-			this.titleAlpha = Math.min(1.0f, this.time - 60 / 60.0f);
-		}
-		else {
-			this.titleAlpha = 0;
-		}
-		if (this.time > 120) {
-			this.yTitleOffset = (int) (- Math.min( 60, this.time - 120));
-		} else {
-			this.yTitleOffset = 0;
-		}
-		if (this.time > 180) {
-			this.barAlpha = Math.min(1.0f, (this.time - 180) / 30.0f);
-		} else {
-			this.barAlpha = 0.0f;
-		}
+		this.backgroundAlphaIn.update();
+		this.titleAlpha.update();
+		this.barAlpha.update();
+		this.yTitleOffset.update();
 		if (this.time > 210) {
 			double boost;
 			if (this.time <= 300) {
-				boost = 10 ;
+				boost = 8 ;
 			}
 			else {
 				boost = 0;
 			}
-			this.barProgress = Math.min(1.0f, this.barProgress + ( boost + 10 * Math.exp(- Math.random() * 10)) / 1000.0f);
+			this.barProgress = Math.min(0.99f, this.barProgress + ( boost + 10 * Math.exp(- Math.random() * 10)) / 1000.0f);
 			int textIndex = (int) Math.min(loadingTextList.length - 1, (this.barProgress * (loadingTextList.length)));
 			this.currentLoadingText = loadingTextList[textIndex];
 			if (this.time % 120 == 0 || this.time == 211) this.currentSubText = subTextList[(int) (Math.random() * subTextList.length)];
 		}
-		if (this.barProgress >= 1.0f) {
-			if (this.alphaFade == 0) this.startFadeOut = this.time - 1;
-			this.alphaFade = Math.min(1.0f, (this.time - this.startFadeOut) / 60.0f);
-		}
+		if (this.barProgress >= 0.99f) {
+			this.backgroundAlphaOut.update();
+			if (this.backgroundAlphaOut.isFinished()) {
+				this.barProgress = 1.0f;
+			}
+		} 
 	}
 
+	@Override
 	public void render(Graphics g, int displayWidth, int displayHeight) {
-		// The game can render more than once per update; only rebuild this pixel buffer
-		// after the scrolling offset has changed.
+		// Render Background
 		if (backgroundDirty) {
-			renderBackground(this.xOffset, this.yOffset);
+			renderBackground(this.backgroundOffsetX, this.backgroundOffsetY);
 			backgroundDirty = false;
 		}
 		g.drawImage(this.image, 0, 0, displayWidth, displayHeight, null);
@@ -148,9 +157,9 @@ public class LoadingMenu extends Menu {
 		int titleHeight = titleWidth * titleImage.getHeight() / titleImage.getWidth();
 		Graphics2D titleGraphics = (Graphics2D) g.create();
 		titleGraphics.setComposite(
-			AlphaComposite.getInstance(AlphaComposite.SRC_OVER, titleAlpha)
+			AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) titleAlpha.value())
 		);
-		drawScaled(titleGraphics, titleImage, (designWidth - titleWidth) / 2, designHeight / 3 + yTitleOffset, titleWidth, titleHeight, displayWidth, displayHeight);
+		drawScaled(titleGraphics, titleImage, (designWidth - titleWidth) / 2, designHeight / 3 + (int) (yTitleOffset.value()), titleWidth, titleHeight, displayWidth, displayHeight);
 		titleGraphics.dispose();
 
 		// Render the unfilled and filled loading bar with alpha transparency
@@ -158,7 +167,7 @@ public class LoadingMenu extends Menu {
 		int barHeight = barWidth * unfilledloadingbarImage.getHeight() / unfilledloadingbarImage.getWidth();
 		Graphics2D barGraphics = (Graphics2D) g.create();
 		barGraphics.setComposite(
-			AlphaComposite.getInstance(AlphaComposite.SRC_OVER, barAlpha)
+			AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) barAlpha.value())
 		);
 		drawScaled(barGraphics, unfilledloadingbarImage, (designWidth - barWidth) / 2, designHeight * 4 / 7 , barWidth, barHeight, displayWidth, displayHeight);
 		drawScaledFromLeft(barGraphics, filledloadingbarImage, this.barProgress, (designWidth - barWidth) / 2, designHeight * 4 / 7 , barWidth, barHeight, displayWidth, displayHeight);
@@ -183,10 +192,13 @@ public class LoadingMenu extends Menu {
 			g.drawString(currentSubText, (designWidth - subTextWidth) / 2, designHeight * 4 / 7 + barHeight + 35);
 		}
 
-		//render black screen for fade in or out
-		if (this.alphaFade != 0){
-			drawBlackFade(g, displayWidth, displayHeight, this.alphaFade);
-		}
+		// Render Black Screen
+		float opacity = (float) (Math.min(1.0f, Math.max(0.0f, 1.0f - (backgroundAlphaIn.value() - backgroundAlphaOut.value()))));
+		Graphics2D overlay = (Graphics2D) g.create();
+		overlay.setColor(new Color(0, 0, 0, opacity));
+		overlay.fillRect(0, 0, displayWidth, displayHeight);
+		overlay.dispose();
+
 	}
 
 	private void drawScaledFromLeft(Graphics g, BufferedImage image, double progress, int x, int y, int width, int height, int displayWidth, int displayHeight) {
