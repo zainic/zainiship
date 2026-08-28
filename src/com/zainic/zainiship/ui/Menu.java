@@ -18,22 +18,35 @@ public abstract class Menu {
 
 	protected int designWidth;
 	protected int designHeight;
-	protected boolean inAnimation;
+	protected boolean exiting;
 	protected int time;
 
 	public Menu(int width, int height) {
 		this.designWidth = width;
 		this.designHeight = height;
 		this.time = 0;
-		this.inAnimation = false;
+	}
+
+	public void startExit() {
+		if (exiting) return;
+		exiting = true;
+	}
+
+	public boolean isExiting() {
+		return exiting;
+	}
+
+	public boolean isExitFinished() {
+		return exiting;
 	}
 
 	public void update() {
 		this.time++;
 	}
 
-	public void onEnter() {
+	public void onEnter(MenuManager.MenuState fromState) {
 		this.time = 0;
+		this.exiting = false;
 	}
 
 	public int getTime() {
@@ -74,10 +87,6 @@ public abstract class Menu {
 		} catch (IOException | IllegalArgumentException e) {
 			throw new IllegalStateException("Could not load menu asset: " + path, e);
 		}
-	}
-
-	public boolean getStatusAnimation() {
-		return inAnimation;
 	}
 
 }

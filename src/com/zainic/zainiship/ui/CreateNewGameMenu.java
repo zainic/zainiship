@@ -72,15 +72,20 @@ public class CreateNewGameMenu extends Menu {
 	private final BufferedImage backgroundImage = loadImage("/menu/createnewgamemenu/createnewgamemenu_background.png");
 	private final BufferedImage titleImage = loadImage("/menu/createnewgamemenu/title.png");
 	private final Button[] buttons = new Button[MenuButton.values().length];
-	private final Tween backgroundOffsetY;
-	private final Tween titleAlpha;
-	private final Tween backButtonOffsetX;
+	private final Tween backgroundOffsetY, exitBackgroundOffsetY;
+	private final Tween titleAlpha, exitTitleAlpha;
+	private final Tween backButtonOffsetX, exitBackButtonOffsetX;
 	private final Tween[] slotButtonOffsetY = new Tween[
 		(int) Arrays.stream(MenuButton.values())
         .filter(button -> button.assetName.equals("Slot"))
         .count()
 	];
 	private final Tween[] slotButtonAlpha = new Tween[
+		(int) Arrays.stream(MenuButton.values())
+        .filter(button -> button.assetName.equals("Slot"))
+        .count()
+	];
+	private final Tween[] exitSlotButtonAlpha = new Tween[
 		(int) Arrays.stream(MenuButton.values())
         .filter(button -> button.assetName.equals("Slot"))
         .count()
@@ -117,17 +122,23 @@ public class CreateNewGameMenu extends Menu {
 					loadImage(path + "_clicked.png"), menuButton.enabled);
 		}
 		this.backgroundOffsetY = new Tween(designHeight, 0, 30, 0, "ease-in-out");
+		this.exitBackgroundOffsetY = new Tween(0, designHeight, 30, 30, "ease-in-out");
 		this.titleAlpha = new Tween(0, 1, 30, 30, "ease-in");
+		this.exitTitleAlpha = new Tween(1, 0, 30, 0, "ease-out");
 		this.backButtonOffsetX = new Tween(-backButtonWidth-getButtonX(MenuButton.BACK), 0, 30, 30, "ease-in");
+		this.exitBackButtonOffsetX = new Tween(0, -backButtonWidth-getButtonX(MenuButton.BACK), 30, 0, "ease-out");
 		for (int i = 0; i < slotButtonOffsetY.length; i++) {
 			slotButtonOffsetY[i] = new Tween(-slotButtonWidth / 5, 0, 30, 30, "ease-out");
 		}
 		for (int i = 0; i < slotButtonAlpha.length; i++) {
 			slotButtonAlpha[i] = new Tween(0, 1, 30, 30, "ease-out");
+			exitSlotButtonAlpha[i] = new Tween(1, 0, 30, 0, "ease-in");
 		}
 	}
 
 	public Action getClickedAction(int displayWidth, int displayHeight) {
+		if (!buttonsReady()) return Action.NONE;
+
 		UiLayout layout = layout(displayWidth, displayHeight);
 		int mouseX = layout.toDesignX(Mouse.getX());
 		int mouseY = layout.toDesignY(Mouse.getY());
@@ -139,20 +150,58 @@ public class CreateNewGameMenu extends Menu {
 		return Action.NONE;
 	}
 
+	private boolean buttonsReady() {
+		return backButtonOffsetX.isFinished()
+				&& Arrays.stream(slotButtonOffsetY).allMatch(Tween::isFinished)
+				&& Arrays.stream(slotButtonAlpha).allMatch(Tween::isFinished)
+				&& !exiting;
+	}
+
 	@Override
-	public void onEnter(){
-		super.onEnter();
+	public void startExit() {
+		if (exiting) return;
+		exiting = true;
+		exitBackgroundOffsetY.reset();
+		exitTitleAlpha.reset();
+		exitBackButtonOffsetX.reset();
+		for (Tween tween : exitSlotButtonAlpha) tween.reset();
+	}
+
+	@Override
+	public boolean isExitFinished() {
+		return exiting
+			&& exitBackgroundOffsetY.isFinished()
+			&& exitTitleAlpha.isFinished()
+			&& exitBackButtonOffsetX.isFinished()
+			&& Arrays.stream(exitSlotButtonAlpha).allMatch(Tween::isFinished);
+	}
+
+	@Override
+	public void onEnter(MenuManager.MenuState fromState){
+		super.onEnter(fromState);
+		backgroundDirty = true;
 		backgroundOffsetY.reset();
 		titleAlpha.reset();
 		backButtonOffsetX.reset();
 		for (Tween tween : slotButtonAlpha) tween.reset();
 		for (Tween tween : slotButtonOffsetY) tween.reset();
+		exitBackgroundOffsetY.reset();
+		exitTitleAlpha.reset();
+		exitBackButtonOffsetX.reset();
+		for (Tween tween : exitSlotButtonAlpha) tween.reset();
 	}
 
 	@Override
 	public void update() {
 		this.time++;
 		backgroundDirty = true;
+		if (exiting) {
+			exitBackgroundOffsetY.update();
+			exitTitleAlpha.update();
+			exitBackButtonOffsetX.update();
+			for (Tween tween : exitSlotButtonAlpha) tween.update();
+			return;
+		}
 		backgroundOffsetY.update();
 		titleAlpha.update();
 		backButtonOffsetX.update();
@@ -164,14 +213,21 @@ public class CreateNewGameMenu extends Menu {
 	public void render(Graphics g, int displayWidth, int displayHeight) {
 		// Render Background
 		if (backgroundDirty) {
-			renderBackground(0, (int) backgroundOffsetY.value());
+			if (exiting) {
+				renderBackground(0, (int) exitBackgroundOffsetY.value());
+			}
+			else {
+				renderBackground(0, (int) backgroundOffsetY.value());
+			}
+			
 			backgroundDirty = false;
 		}
 		g.drawImage(this.image, 0, 0, displayWidth, displayHeight, null);
 
 		// Render Title Create New Game Menu
 		Graphics2D titleGraphics = (Graphics2D) g.create();
-		titleGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) titleAlpha.value()));
+		float alpha = this.exiting ? (float) exitTitleAlpha.value() : (float) titleAlpha.value();
+		titleGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 		drawScaled(titleGraphics, titleImage, (designWidth - titleWidth) / 2, 20, titleWidth, titleHeight, displayWidth, displayHeight);
 		titleGraphics.dispose();
 
@@ -181,12 +237,14 @@ public class CreateNewGameMenu extends Menu {
 		int mouseY = layout.toDesignY(Mouse.getY());
 		for (int i = 0; i < buttons.length; i++) {
 			if (MenuButton.values()[i].equals(MenuButton.BACK)) {
+				int offset = this.exiting ? (int) exitBackButtonOffsetX.value() : (int) backButtonOffsetX.value();
 				buttons[i].renderAt(g, layout, mouseX, mouseY, Mouse.getB() == Mouse.LMB, 
-					(int) backButtonOffsetX.value(), 0);
+					offset, 0);
 			}
 			else {
 				Graphics2D buttonGraphics = (Graphics2D) g.create();
-				buttonGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) slotButtonAlpha[i-1].value()));
+				float alphaB = this.exiting ? (float) exitSlotButtonAlpha[i-1].value() : (float) slotButtonAlpha[i-1].value();
+				buttonGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alphaB));
 				buttons[i].renderAt(buttonGraphics, layout, mouseX, mouseY, Mouse.getB() == Mouse.LMB, 
 					0, (int) slotButtonOffsetY[i-1].value());
 				buttonGraphics.dispose();

@@ -102,8 +102,8 @@ public class LoadingMenu extends Menu {
 	}
 
 	@Override
-	public void onEnter() {
-		super.onEnter();
+	public void onEnter(MenuManager.MenuState fromState) {
+		super.onEnter(fromState);
 		titleAlpha.reset();
 		barAlpha.reset();
 		backgroundAlphaIn.reset();

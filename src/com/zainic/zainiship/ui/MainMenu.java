@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 import com.zainic.zainiship.input.Mouse;
 import com.zainic.zainiship.ui.animation.Tween;
@@ -15,20 +16,35 @@ public class MainMenu extends Menu {
 	private int buttonHeight;
 	private int buttonGap;
 	private int firstButtonY;
+	private MenuButton[] menuButtons;
+
+	public enum Action {
+		NONE,
+		NEW_GAME,
+		LOAD_GAME,
+		SETTINGS,
+		INFORMATION,
+		QUIT_GAME;
+
+		Action() {
+		}
+	}
 
 	private enum MenuButton {
-		NEW_GAME("NewGame", true),
-		LOAD_GAME("LoadGame", true),
-		SETTINGS("Settings", true),
-		INFO("Info", true),
-		QUIT_GAME("QuitGame", true);
+		NEW_GAME("NewGame", true, Action.NEW_GAME),
+		LOAD_GAME("LoadGame", true, Action.LOAD_GAME),
+		SETTINGS("Settings", true, Action.SETTINGS),
+		INFO("Info", true, Action.INFORMATION),
+		QUIT_GAME("QuitGame", true, Action.QUIT_GAME);
 
 		final String assetName;
 		final boolean enabled;
+		final Action action;
 
-		MenuButton(String assetName, boolean enabled) {
+		MenuButton(String assetName, boolean enabled, Action action) {
 			this.assetName = assetName;
 			this.enabled = enabled;
+			this.action = action;
 		}
 	}
 
@@ -36,8 +52,9 @@ public class MainMenu extends Menu {
 	private final BufferedImage title = loadImage("/menu/mainmenu/title.png");
 	private final Button[] buttons = new Button[MenuButton.values().length];
 	private final Tween backgroundAlpha;
-	private final Tween titleAlpha;
+	private final Tween titleAlpha, exitTitleAlpha;
 	private final Tween[] buttonOffsetX = new Tween[MenuButton.values().length];
+	private final Tween[] exitButtonOffsetX = new Tween[MenuButton.values().length];
 
 	public MainMenu(int width, int height) {
 		super(width, height);
@@ -45,7 +62,7 @@ public class MainMenu extends Menu {
 		this.buttonHeight = height * 1 / 8;
 		this.buttonGap = height * 1 / 360;
 		this.firstButtonY = height * 2 / 7;
-		MenuButton[] menuButtons = MenuButton.values();
+		this.menuButtons = MenuButton.values();
 		for (int i = 0; i < menuButtons.length; i++) {
 			String path = "/buttons/" + menuButtons[i].assetName;
 			this.buttons[i] = new Button(getButtonX(), getButtonY(i), buttonWidth, buttonHeight,
@@ -54,29 +71,67 @@ public class MainMenu extends Menu {
 		}
 		backgroundAlpha = new Tween(0, 1, 60, 0, "ease-out");
 		titleAlpha = new Tween(0, 1, 30, 30, "ease-in");
+		exitTitleAlpha = new Tween(1, 0, 30, 0, "ease-out");
 		for (int i = 0; i < buttonOffsetX.length; i++) {
 			buttonOffsetX[i] = new Tween(-buttonWidth-getButtonX(), 0, 30, 20 + i * 5, "ease-out");
+			exitButtonOffsetX[i] = new Tween(0, -buttonWidth-getButtonX(), 30, ( 5 - i ) * 5, "ease-in");
 		}
 	}
 
-	public boolean isNewGameClicked(int displayWidth, int displayHeight) {
+	public Action getClickedAction(int displayWidth, int displayHeight) {
+		if (!buttonsReady()) return Action.NONE;
+
 		UiLayout layout = layout(displayWidth, displayHeight);
-		int index = MenuButton.NEW_GAME.ordinal();
-		return buttons[index].isClickedAt(layout.toDesignX(Mouse.getX()), layout.toDesignY(Mouse.getY()),
-				(int) Math.round(buttonOffsetX[index].value()), 0);
+		int mouseX = layout.toDesignX(Mouse.getX());
+		int mouseY = layout.toDesignY(Mouse.getY());
+		for (int i = 0; i < buttons.length; i++) {
+			if (buttons[i].isClicked(mouseX, mouseY)) {
+				return menuButtons[i].action;
+			}
+		}
+		return Action.NONE;
+	}
+
+	private boolean buttonsReady() {
+		return Arrays.stream(buttonOffsetX).allMatch(Tween::isFinished) 
+			&& !exiting;
 	}
 
 	@Override
-	public void onEnter() {
-		super.onEnter();
-		backgroundAlpha.reset();
+	public void startExit() {
+		if (exiting) return;
+		exiting = true;
+		exitTitleAlpha.reset();
+		for (Tween tween : exitButtonOffsetX) tween.reset();
+	}
+
+	@Override
+	public boolean isExitFinished() {
+		return exiting
+			&& exitTitleAlpha.isFinished()
+			&& Arrays.stream(exitButtonOffsetX).allMatch(Tween::isFinished);
+	}
+
+	@Override
+	public void onEnter(MenuManager.MenuState fromState) {
+		super.onEnter(fromState);
+		if (fromState.equals(MenuManager.MenuState.LOADING)) {
+			backgroundAlpha.reset();
+		}
 		titleAlpha.reset();
 		for (Tween tween : buttonOffsetX) tween.reset();
+		exitTitleAlpha.reset();
+		for (Tween tween : exitButtonOffsetX) tween.reset();
 	}
 
 	@Override
 	public void update() {
 		super.update();
+		if (exiting) {
+			exitTitleAlpha.update();
+			for (Tween tween : exitButtonOffsetX) tween.update();
+			return;
+		}
 		backgroundAlpha.update();
 		titleAlpha.update();
 		for (Tween tween : buttonOffsetX) tween.update();
@@ -91,7 +146,8 @@ public class MainMenu extends Menu {
 		int titleWidth = designWidth * 3 / 5;
 		int titleHeight = titleWidth * title.getHeight() / title.getWidth();
 		Graphics2D titleGraphics = (Graphics2D) g.create();
-		titleGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) titleAlpha.value()));
+		float alpha = exiting ? (float) exitTitleAlpha.value() : (float) titleAlpha.value();
+		titleGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 		drawScaled(titleGraphics, title, (designWidth - titleWidth) / 2, 20, titleWidth, titleHeight, displayWidth, displayHeight);
 		titleGraphics.dispose();
 
@@ -100,8 +156,9 @@ public class MainMenu extends Menu {
 		int mouseX = layout.toDesignX(Mouse.getX());
 		int mouseY = layout.toDesignY(Mouse.getY());
 		for (int i = 0; i < buttons.length; i++) {
+			float offsetX = exiting ? (float) exitButtonOffsetX[i].value() : (float) buttonOffsetX[i].value();
 			buttons[i].renderAt(g, layout, mouseX, mouseY, Mouse.getB() == Mouse.LMB,
-					(int) Math.round(buttonOffsetX[i].value()), 0);
+					(int) Math.round(offsetX), 0);
 		}
 
 		// Render Black Screen
