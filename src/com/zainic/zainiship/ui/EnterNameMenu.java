@@ -107,7 +107,7 @@ public class EnterNameMenu extends Menu {
 		this.nameField = new SingleLineTextField(keyboard, designWidth / 2,
 				designHeight / 2 - designHeight / 12,
 				backgroundEnterNameWindowWidth * 7 / 9, backgroundEnterNameWindowHeight * 1 / 5,
-				255, ORBITRON_REGULAR_20, TEXT_COLOR_WHITE,
+				255, ORBITRON_REGULAR.deriveFont(20f), TEXT_COLOR_WHITE,
 				character -> Character.isLetterOrDigit(character)
 						|| character == ' ' || character == '-' || character == '_',
 				Color.BLACK, 0.25f,
@@ -383,6 +383,7 @@ public class EnterNameMenu extends Menu {
 		// ============================================================
 
 		if (backgroundAlpha > 0) {
+			UiLayout layout = layout(displayWidth, displayHeight);
 			Graphics2D bgGraphics = (Graphics2D) g.create();
 			bgGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, backgroundAlpha));
 			drawScaled(bgGraphics, backgroundEnterNameWindowImage,
@@ -390,6 +391,10 @@ public class EnterNameMenu extends Menu {
 					centerY - backgroundEnterNameWindowHeight / 2 - designHeight / 12,
 					backgroundEnterNameWindowWidth, backgroundEnterNameWindowHeight,
 					displayWidth, displayHeight);
+			bgGraphics.setFont(ORBITRON_BOLD.deriveFont(40f));
+			bgGraphics.setColor(Color.WHITE);
+			drawCenteredText(bgGraphics, "ENTER YOUR NAME",
+					designWidth / 2, layout.scaleY(centerY - designHeight / 12 - backgroundEnterNameWindowHeight * 25 / 100));
 			bgGraphics.dispose();
 		}
 

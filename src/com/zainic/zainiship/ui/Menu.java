@@ -13,9 +13,8 @@ import com.zainic.zainiship.ui.font.CustomFont;
 public abstract class Menu {
 
 	protected static final Color TEXT_COLOR_WHITE = Color.WHITE;
-	protected static final Font ORBITRON_BOLD_20 = CustomFont.orbitron20.get("Bold");
-	protected static final Font ORBITRON_REGULAR_15 = CustomFont.orbitron15.get("Regular");
-	protected static final Font ORBITRON_REGULAR_20 = CustomFont.orbitron20.get("Regular");
+	protected static final Font ORBITRON_BOLD = CustomFont.orbitron.get("Bold");
+	protected static final Font ORBITRON_REGULAR = CustomFont.orbitron.get("Regular");
 
 	protected int designWidth;
 	protected int designHeight;
@@ -74,6 +73,10 @@ public abstract class Menu {
 
 	protected void drawScaled(Graphics g, BufferedImage image, int x, int y, int width, int height, int displayWidth, int displayHeight) {
 		layout(displayWidth, displayHeight).draw(g, image, x, y, width, height);
+	}
+
+	protected void drawCenteredText(Graphics g, String text, int centerX, int baselineY) {
+		g.drawString(text, centerX - g.getFontMetrics().stringWidth(text) / 2, baselineY);
 	}
 
 	protected int toDesignX(int value, int displayWidth) {
