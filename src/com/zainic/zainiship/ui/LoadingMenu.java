@@ -125,7 +125,7 @@ public class LoadingMenu extends Menu {
 		if (this.time > 210) {
 			double boost;
 			if (this.time <= 300) {
-				boost = 8 ;
+				boost = 50 ;
 			}
 			else {
 				boost = 0;
@@ -145,14 +145,19 @@ public class LoadingMenu extends Menu {
 
 	@Override
 	public void render(Graphics g, int displayWidth, int displayHeight) {
-		// Render Background
+		renderBackgroundLayer(g, displayWidth, displayHeight);
+		renderOverlay(g, displayWidth, displayHeight, false);
+	}
+
+	private void renderBackgroundLayer(Graphics g, int displayWidth, int displayHeight) {
 		if (backgroundDirty) {
 			renderBackground(this.backgroundOffsetX, this.backgroundOffsetY);
 			backgroundDirty = false;
 		}
 		g.drawImage(this.image, 0, 0, displayWidth, displayHeight, null);
+	}
 
-		// Render the title with alpha transparency
+	private void renderOverlay(Graphics g, int displayWidth, int displayHeight, boolean foreground) {
 		int titleWidth = designWidth * 4 / 5;
 		int titleHeight = titleWidth * titleImage.getHeight() / titleImage.getWidth();
 		Graphics2D titleGraphics = (Graphics2D) g.create();
@@ -176,16 +181,16 @@ public class LoadingMenu extends Menu {
 		// Render the loading text
 		if (currentLoadingText != null && currentSubText != null) {
 			g.setColor(TEXT_COLOR_WHITE);
-			g.setFont(ORBITRON_BOLD_20);
+			g.setFont(ORBITRON_BOLD.deriveFont(20f));
 			if (!currentLoadingText.equals(measuredLoadingText)) {
-				FontMetrics metrics = g.getFontMetrics(ORBITRON_BOLD_20);
+				FontMetrics metrics = g.getFontMetrics(ORBITRON_BOLD.deriveFont(20f));
 				loadingTextWidth = metrics.stringWidth(currentLoadingText);
 				measuredLoadingText = currentLoadingText;
 			}
 			g.drawString(currentLoadingText, (designWidth - loadingTextWidth) / 2, designHeight * 4 / 7 + barHeight + 10);
-			g.setFont(ORBITRON_REGULAR_15);
+			g.setFont(ORBITRON_REGULAR.deriveFont(15f));
 			if (!currentSubText.equals(measuredSubText)) {
-				FontMetrics metrics = g.getFontMetrics(ORBITRON_REGULAR_15);
+				FontMetrics metrics = g.getFontMetrics(ORBITRON_REGULAR.deriveFont(15f));
 				subTextWidth = metrics.stringWidth(currentSubText);
 				measuredSubText = currentSubText;
 			}
@@ -199,6 +204,9 @@ public class LoadingMenu extends Menu {
 		overlay.fillRect(0, 0, displayWidth, displayHeight);
 		overlay.dispose();
 
+		if (foreground) {
+			// Do nothing
+		}
 	}
 
 	private void drawScaledFromLeft(Graphics g, BufferedImage image, double progress, int x, int y, int width, int height, int displayWidth, int displayHeight) {

@@ -1,8 +1,12 @@
 package com.zainic.zainiship.ui;
 
 import java.awt.Graphics;
+import java.io.IOException;
 
+import com.zainic.zainiship.input.Keyboard;
 import com.zainic.zainiship.input.Mouse;
+import com.zainic.zainiship.save.SaveData;
+import com.zainic.zainiship.save.SaveManager;
 
 /** Owns menu state, input handling, rendering, and transitions within the menu flow. */
 public final class MenuManager {
@@ -16,6 +20,7 @@ public final class MenuManager {
 		LOADING,
 		MAIN_MENU,
 		CREATE_NEW_GAME,
+		ENTER_NAME,
 		LOAD_GAME,
 		SETTINGS,
 		INFORMATION,
@@ -27,11 +32,31 @@ public final class MenuManager {
 	private final LoadingMenu loadingMenu;
 	private final MainMenu mainMenu;
 	private final CreateNewGameMenu createNewGameMenu;
+	private final EnterNameMenu enterNameMenu;
+	private final SaveManager saveManager;
+	private int selectedSlot = -1;
+	private SaveData currentSave;
 
-	public MenuManager(int designWidth, int designHeight) {
+	public MenuManager(int designWidth, int designHeight, Keyboard keyboard) {
+		saveManager = new SaveManager();
 		loadingMenu = new LoadingMenu(designWidth, designHeight);
 		mainMenu = new MainMenu(designWidth, designHeight);
-		createNewGameMenu = new CreateNewGameMenu(designWidth, designHeight);
+		createNewGameMenu = new CreateNewGameMenu(designWidth, designHeight, saveManager);
+		enterNameMenu = new EnterNameMenu(designWidth, designHeight, keyboard);
+	}
+
+	public String getPlayerName() {
+		return currentSave == null ? "" : currentSave.getPlayerName();
+	}
+
+	public SaveData getCurrentSave() {
+		return currentSave;
+	}
+
+	/** Replaces the active slot with the latest gameplay state. */
+	public void saveCurrentGame(SaveData data) throws IOException {
+		if (selectedSlot < 0) throw new IllegalStateException("No save slot is active");
+		currentSave = saveManager.save(selectedSlot, data);
 	}
 
 	public MenuResult update(int displayWidth, int displayHeight) {
@@ -61,14 +86,12 @@ public final class MenuManager {
 					return MenuResult.NONE;
 				}
 				MainMenu.Action mainMenuAction = mainMenu.getClickedAction(displayWidth, displayHeight);
-				if (!(mainMenuAction.equals(MainMenu.Action.NONE))) {
-					mainMenu.startExit();
-				}
 				switch(mainMenuAction) {
 					case NEW_GAME:
 						nextState = MenuState.CREATE_NEW_GAME;
 						break;
 					case LOAD_GAME:
+						// Replace this destination when LoadGameMenu is implemented.
 						nextState = MenuState.CREATE_NEW_GAME;
 						break;
 					case SETTINGS:
@@ -82,6 +105,9 @@ public final class MenuManager {
 						break;
 					default:
 						nextState = MenuState.MAIN_MENU;
+				}
+				if (mainMenuAction != MainMenu.Action.NONE) {
+					mainMenu.startExit(nextState);
 				}
 				return MenuResult.NONE;
 			case CREATE_NEW_GAME:
@@ -101,23 +127,72 @@ public final class MenuManager {
 					return MenuResult.NONE;
 				}
 				CreateNewGameMenu.Action createNewMenuAction = createNewGameMenu.getClickedAction(displayWidth, displayHeight);
-				if (!(createNewMenuAction.equals(CreateNewGameMenu.Action.NONE))) {
-					createNewGameMenu.startExit();
-				}
 				switch(createNewMenuAction) {
 					case BACK:
 						nextState = MenuState.MAIN_MENU;
+						createNewGameMenu.startExit(nextState);
 						return MenuResult.NONE;
 					case SELECT_SAVE_SLOT_1:
-						return MenuResult.START_GAME;
 					case SELECT_SAVE_SLOT_2:
-						return MenuResult.START_GAME;
 					case SELECT_SAVE_SLOT_3:
-						return MenuResult.START_GAME;
 					case SELECT_SAVE_SLOT_4:
-						return MenuResult.START_GAME;
+						selectedSlot = createNewMenuAction.getSaveSlotIndex();
+						SaveData selectedSave = createNewGameMenu.getSlotData(selectedSlot);
+						if (selectedSave != null) {
+							createNewGameMenu.requestOverwriteConfirmation(selectedSlot);
+							return MenuResult.NONE;
+						}
+						nextState = MenuState.ENTER_NAME;
+						createNewGameMenu.startExit(nextState);
+						return MenuResult.NONE;
+					case CONFIRM_REPLACE:
+						createNewGameMenu.closeOverwriteConfirmation();
+						nextState = MenuState.ENTER_NAME;
+						createNewGameMenu.startExit(nextState);
+						return MenuResult.NONE;
+					case CANCEL_REPLACE:
+						selectedSlot = -1;
+						createNewGameMenu.closeOverwriteConfirmation();
+						return MenuResult.NONE;
 					default:
 						nextState = MenuState.CREATE_NEW_GAME;
+						return MenuResult.NONE;
+				}
+			case ENTER_NAME:
+				enterNameMenu.update();
+				if (enterNameMenu.isExitFinished()) {
+					Mouse.consumeLeftClick();
+					fromState = state;
+					state = nextState;
+					activeMenu().onEnter(fromState);
+					return MenuResult.NONE;
+				}
+				if (enterNameMenu.isExiting()) {
+					Mouse.consumeLeftClick();
+					return MenuResult.NONE;
+				}
+				if (!Mouse.consumeLeftClick()) {
+					return MenuResult.NONE;
+				}
+				EnterNameMenu.Action enterNameMenuAction = enterNameMenu.getClickedAction(displayWidth, displayHeight);
+				switch(enterNameMenuAction) {
+					case BACK:
+						nextState = MenuState.CREATE_NEW_GAME;
+						enterNameMenu.startExit(nextState);
+						return MenuResult.NONE;
+					case OK:
+						if (!enterNameMenu.getEnteredName().isEmpty()) {
+							SaveData newSave = SaveData.newGame(enterNameMenu.getEnteredName());
+							try {
+								currentSave = saveManager.save(selectedSlot, newSave);
+								return MenuResult.START_GAME;
+							} catch (IOException exception) {
+								System.err.println("Could not save game: " + exception.getMessage());
+							}
+						}
+						return MenuResult.NONE;
+					default:
+						nextState = MenuState.ENTER_NAME;
 						return MenuResult.NONE;
 				}
 			default:
@@ -130,6 +205,7 @@ public final class MenuManager {
 			case LOADING: return loadingMenu;
 			case MAIN_MENU: return mainMenu;
 			case CREATE_NEW_GAME: return createNewGameMenu;
+			case ENTER_NAME: return enterNameMenu;
 			default: throw new IllegalStateException("Unhandled menu state: " + state);
 		}
 	}
