@@ -10,6 +10,7 @@ public class CustomFont {
     private final String family;
     private final float size;
 
+    public static CustomFont orbitron25 = new CustomFont("Orbitron", 20f);
     public static CustomFont orbitron20 = new CustomFont("Orbitron", 20f);
     public static CustomFont orbitron15 = new CustomFont("Orbitron", 15f);
 

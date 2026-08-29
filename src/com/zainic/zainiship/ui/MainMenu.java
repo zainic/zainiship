@@ -9,6 +9,7 @@ import java.util.Arrays;
 
 import com.zainic.zainiship.input.Mouse;
 import com.zainic.zainiship.ui.animation.Tween;
+import com.zainic.zainiship.ui.components.Button;
 
 public class MainMenu extends Menu {
 

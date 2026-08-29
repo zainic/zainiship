@@ -1,13 +1,12 @@
-package com.zainic.zainiship.ui;
+package com.zainic.zainiship.ui.components;
 
-// import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import com.zainic.zainiship.ui.UiLayout;
+
 /** A design-space image button with shared visual state and hit testing. */
 public final class Button {
-
-	// private static final Color DISABLED_OVERLAY = new Color(0, 0, 0, 115);
 
 	private final int x;
 	private final int y;
@@ -48,7 +47,6 @@ public final class Button {
 		renderAt(g, layout, mouseX, mouseY, mousePressed, 0, 0);
 	}
 
-	/** Renders at an animated offset; hit testing uses the same offset. */
 	public void renderAt(Graphics g, UiLayout layout, int mouseX, int mouseY, boolean mousePressed,
 			int offsetX, int offsetY) {
 		BufferedImage image = normalImage;
@@ -58,7 +56,8 @@ public final class Button {
 		layout.draw(g, image, x + offsetX, y + offsetY, width, height);
 
 		if (!enabled) {
-			g.fillRect(layout.scaleX(x + offsetX), layout.scaleY(y + offsetY), layout.scaleX(width), layout.scaleY(height));
+			g.fillRect(layout.scaleX(x + offsetX), layout.scaleY(y + offsetY),
+					layout.scaleX(width), layout.scaleY(height));
 		}
 	}
 
