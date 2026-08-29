@@ -1,6 +1,8 @@
 package com.zainic.zainiship.ui.components;
 
+import java.awt.AlphaComposite;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import com.zainic.zainiship.ui.UiLayout;
@@ -15,7 +17,7 @@ public final class Button {
 	private final BufferedImage normalImage;
 	private final BufferedImage hoveredImage;
 	private final BufferedImage pressedImage;
-	private final boolean enabled;
+	private boolean enabled;
 
 	public Button(int x, int y, int width, int height, BufferedImage normalImage,
 			BufferedImage hoveredImage, BufferedImage pressedImage, boolean enabled) {
@@ -53,11 +55,14 @@ public final class Button {
 		if (isClickedAt(mouseX, mouseY, offsetX, offsetY)) {
 			image = mousePressed ? pressedImage : hoveredImage;
 		}
-		layout.draw(g, image, x + offsetX, y + offsetY, width, height);
-
-		if (!enabled) {
-			g.fillRect(layout.scaleX(x + offsetX), layout.scaleY(y + offsetY),
-					layout.scaleX(width), layout.scaleY(height));
+		if (enabled) {
+			layout.draw(g, image, x + offsetX, y + offsetY, width, height);
+		}
+		else {
+			Graphics2D buttonGraphics = (Graphics2D) g.create();
+			float currentAlpha = ((AlphaComposite) (buttonGraphics.getComposite())).getAlpha();
+			buttonGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, currentAlpha * 0.5f));
+			layout.draw(buttonGraphics, image, x + offsetX, y + offsetY, width, height);
 		}
 	}
 
@@ -67,5 +72,9 @@ public final class Button {
 
 	public int getButtonHeight() {
 		return normalImage.getHeight();
+	}
+
+	public void setEnabled(boolean enabled){
+		this.enabled = enabled;
 	}
 }

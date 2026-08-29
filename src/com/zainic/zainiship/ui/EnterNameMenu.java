@@ -179,7 +179,7 @@ public class EnterNameMenu extends Menu {
 		UiLayout layout = layout(displayWidth, displayHeight);
 		int mouseX = layout.toDesignX(Mouse.getX());
 		int mouseY = layout.toDesignY(Mouse.getY());
-		Graphics2D clickGraphics = image.createGraphics();
+		Graphics clickGraphics = image.getGraphics();
 		boolean clickedNameField = nameField.click(mouseX, mouseY, clickGraphics);
 		clickGraphics.dispose();
 		if (clickedNameField) {
@@ -294,6 +294,12 @@ public class EnterNameMenu extends Menu {
 			exitOkButtonAlpha.update();
 			return;
 		}
+		if (getEnteredName().isEmpty()){
+			buttons[MenuButton.OK.ordinal()].setEnabled(false);
+		}
+		else {
+			buttons[MenuButton.OK.ordinal()].setEnabled(true);
+		}
 		nameField.update();
 		leftWindowOffsetY.update();
 		rightWindowOffsetY.update();
@@ -311,15 +317,20 @@ public class EnterNameMenu extends Menu {
 
 	@Override
 	public void render(Graphics g, int displayWidth, int displayHeight) {
-		// Render Background
+		renderBackgroundLayer(g, displayWidth, displayHeight);
+		renderOverlay(g, displayWidth, displayHeight, false);
+		renderComponents(g, displayWidth, displayHeight);
+	}
+
+	private void renderBackgroundLayer(Graphics g, int displayWidth, int displayHeight) {
 		if (backgroundDirty) {
 			renderBackground(0, 0);
 			backgroundDirty = false;
 		}
 		g.drawImage(this.image, 0, 0, displayWidth, displayHeight, null);
+	}
 
-		// ==== Render Window ====
-		// initiate variable
+	private void renderOverlay(Graphics g, int displayWidth, int displayHeight, boolean foreground) {
 		int centerX = designWidth / 2;
 		int centerY = designHeight / 2;
 		int sideWidth = Math.max(leftEnterNameWindowWidth, rightEnterNameWindowWidth);
@@ -408,7 +419,15 @@ public class EnterNameMenu extends Menu {
 		drawScaled(rightGraphics, rightEnterNameWindowImage, rightX, rightY, sideWidth, windowHeight, displayWidth, displayHeight);
 		rightGraphics.dispose();
 
-		// ==== Render Name Field ====
+		if (foreground) {
+			// Do nothing
+		}
+	}
+
+	private void renderComponents(Graphics g, int displayWidth, int displayHeight) {
+		float backgroundAlpha = exiting
+				? (float) exitBackgroundWindowAlpha.value()
+				: (float) backgroundWindowAlpha.value();
 		if (backgroundAlpha > 0) {
 			Graphics2D textGraphics = (Graphics2D) g.create();
 			textGraphics.scale(displayWidth / (double) designWidth, displayHeight / (double) designHeight);
@@ -417,8 +436,6 @@ public class EnterNameMenu extends Menu {
 			textGraphics.dispose();
 		}
 
-		// ==== Render Buttons ====
-		// initiate variable
 		UiLayout layout = layout(displayWidth, displayHeight);
 		int mouseX = layout.toDesignX(Mouse.getX());
 		int mouseY = layout.toDesignY(Mouse.getY());

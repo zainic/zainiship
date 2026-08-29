@@ -140,10 +140,17 @@ public class MainMenu extends Menu {
 
 	@Override
 	public void render(Graphics g, int displayWidth, int displayHeight) {
-		// Render Background
-		g.drawImage(background, 0, 0, displayWidth, displayHeight, null);
+		renderBackgroundLayer(g, displayWidth, displayHeight);
+		renderOverlay(g, displayWidth, displayHeight, false);
+		renderComponents(g, displayWidth, displayHeight);
+		renderOverlay(g, displayWidth, displayHeight, true);
+	}
 
-		// Render title Main Menu
+	private void renderBackgroundLayer(Graphics g, int displayWidth, int displayHeight) {
+		g.drawImage(background, 0, 0, displayWidth, displayHeight, null);
+	}
+
+	private void renderOverlay(Graphics g, int displayWidth, int displayHeight, boolean foreground) {
 		int titleWidth = designWidth * 3 / 5;
 		int titleHeight = titleWidth * title.getHeight() / title.getWidth();
 		Graphics2D titleGraphics = (Graphics2D) g.create();
@@ -152,7 +159,16 @@ public class MainMenu extends Menu {
 		drawScaled(titleGraphics, title, (designWidth - titleWidth) / 2, 20, titleWidth, titleHeight, displayWidth, displayHeight);
 		titleGraphics.dispose();
 
-		// Render buttons in Main Menu
+		if (foreground) {
+			float opacity = (float) Math.min(1.0f, Math.max(0.0f, 1.0f - backgroundAlpha.value()));
+			Graphics2D overlay = (Graphics2D) g.create();
+			overlay.setColor(new Color(0, 0, 0, opacity));
+			overlay.fillRect(0, 0, displayWidth, displayHeight);
+			overlay.dispose();
+		}
+	}
+
+	private void renderComponents(Graphics g, int displayWidth, int displayHeight) {
 		UiLayout layout = layout(displayWidth, displayHeight);
 		int mouseX = layout.toDesignX(Mouse.getX());
 		int mouseY = layout.toDesignY(Mouse.getY());
@@ -161,13 +177,6 @@ public class MainMenu extends Menu {
 			buttons[i].renderAt(g, layout, mouseX, mouseY, Mouse.getB() == Mouse.LMB,
 					(int) Math.round(offsetX), 0);
 		}
-
-		// Render Black Screen
-		float opacity = (float) (Math.min(1.0f, Math.max(0.0f, 1.0f - backgroundAlpha.value())));
-		Graphics2D overlay = (Graphics2D) g.create();
-		overlay.setColor(new Color(0, 0, 0, opacity));
-		overlay.fillRect(0, 0, displayWidth, displayHeight);
-		overlay.dispose();
 	}
 
 	private int getButtonX() {

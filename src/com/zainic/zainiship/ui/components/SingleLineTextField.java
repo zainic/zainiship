@@ -5,6 +5,7 @@ import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
@@ -123,7 +124,7 @@ public final class SingleLineTextField {
 				&& y >= centerY - height / 2 && y < centerY + height / 2;
 	}
 
-	public boolean click(int x, int y, Graphics2D graphics) {
+	public boolean click(int x, int y, Graphics graphics) {
 		if (!contains(x, y)) return false;
 		graphics.setFont(font);
 		FontMetrics metrics = graphics.getFontMetrics();
@@ -142,9 +143,9 @@ public final class SingleLineTextField {
 		return true;
 	}
 
-	public void render(Graphics2D graphics, boolean showCaret) {
-		float currentAlpha = ((AlphaComposite) graphics.getComposite()).getAlpha();
+	public void render(Graphics graphics, boolean showCaret) {
 		Graphics2D styleGraphics = (Graphics2D) graphics.create();
+		float currentAlpha = ((AlphaComposite) styleGraphics.getComposite()).getAlpha();
 		Rectangle2D.Float bounds = new Rectangle2D.Float(centerX - width / 2.0f, centerY - height / 2.0f, width, height);
 		if (backgroundColor != null) {
 			styleGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, currentAlpha * backgroundAlpha));

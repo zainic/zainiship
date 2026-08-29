@@ -229,7 +229,12 @@ public class CreateNewGameMenu extends Menu {
 
 	@Override
 	public void render(Graphics g, int displayWidth, int displayHeight) {
-		// Render Background
+		renderBackgroundLayer(g, displayWidth, displayHeight);
+		renderOverlay(g, displayWidth, displayHeight, false);
+		renderComponents(g, displayWidth, displayHeight);
+	}
+
+	private void renderBackgroundLayer(Graphics g, int displayWidth, int displayHeight) {
 		if (backgroundDirty) {
 			if (exiting) {
 				renderBackground(0, (int) exitBackgroundOffsetY.value());
@@ -241,15 +246,21 @@ public class CreateNewGameMenu extends Menu {
 			backgroundDirty = false;
 		}
 		g.drawImage(this.image, 0, 0, displayWidth, displayHeight, null);
+	}
 
-		// Render Title Create New Game Menu
+	private void renderOverlay(Graphics g, int displayWidth, int displayHeight, boolean foreground) {
 		Graphics2D titleGraphics = (Graphics2D) g.create();
 		float alpha = this.exiting ? (float) exitTitleAlpha.value() : (float) titleAlpha.value();
 		titleGraphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 		drawScaled(titleGraphics, titleImage, (designWidth - titleWidth) / 2, 20, titleWidth, titleHeight, displayWidth, displayHeight);
 		titleGraphics.dispose();
+		
+		if (foreground) {
+			// Do nothing
+		}
+	}
 
-		// Render Buttons Create New Game Menu
+	private void renderComponents(Graphics g, int displayWidth, int displayHeight) {
 		UiLayout layout = layout(displayWidth, displayHeight);
 		int mouseX = layout.toDesignX(Mouse.getX());
 		int mouseY = layout.toDesignY(Mouse.getY());

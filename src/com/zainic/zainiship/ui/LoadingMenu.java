@@ -145,14 +145,19 @@ public class LoadingMenu extends Menu {
 
 	@Override
 	public void render(Graphics g, int displayWidth, int displayHeight) {
-		// Render Background
+		renderBackgroundLayer(g, displayWidth, displayHeight);
+		renderOverlay(g, displayWidth, displayHeight, false);
+	}
+
+	private void renderBackgroundLayer(Graphics g, int displayWidth, int displayHeight) {
 		if (backgroundDirty) {
 			renderBackground(this.backgroundOffsetX, this.backgroundOffsetY);
 			backgroundDirty = false;
 		}
 		g.drawImage(this.image, 0, 0, displayWidth, displayHeight, null);
+	}
 
-		// Render the title with alpha transparency
+	private void renderOverlay(Graphics g, int displayWidth, int displayHeight, boolean foreground) {
 		int titleWidth = designWidth * 4 / 5;
 		int titleHeight = titleWidth * titleImage.getHeight() / titleImage.getWidth();
 		Graphics2D titleGraphics = (Graphics2D) g.create();
@@ -199,6 +204,9 @@ public class LoadingMenu extends Menu {
 		overlay.fillRect(0, 0, displayWidth, displayHeight);
 		overlay.dispose();
 
+		if (foreground) {
+			// Do nothing
+		}
 	}
 
 	private void drawScaledFromLeft(Graphics g, BufferedImage image, double progress, int x, int y, int width, int height, int displayWidth, int displayHeight) {
